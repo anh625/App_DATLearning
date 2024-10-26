@@ -6,5 +6,6 @@ export default function App() {
       <MyTabs/>
       //<AppNavigation />
       ////cai gi do
+      //test ban 2.0
   );
 }
