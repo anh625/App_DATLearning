@@ -30,7 +30,7 @@ const ForgetPassThird: React.FC<StatusProps> = ({funVoid, data, getData}) => {
     }
     return(
         <View style={styleForgetPassword.forgetPassword}> 
-                    <Image style={styleForgetPassword.imgForgetPassword} source={require("@/images/png/forgetPassword.png")}/>
+                    <Image style={styleForgetPassword.imgForgetPassword} source={require("@/assets/images/png/forgetPassword.png")}/>
                     <Text style={styleForgetPassword.title}>NEW</Text>
                     <Text style={styleForgetPassword.title}>CREDENTIAL</Text>
                     <View style={styleForgetPassword.detailView}>

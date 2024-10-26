@@ -39,7 +39,7 @@ const ForgetPassSecond: React.FC<StatusProps> = ({funVoid}) => {
 
     return(
         <View style={styleForgetPassword.forgetPassword}> 
-                    <Image style={styleForgetPassword.imgForgetPassword} source={require("@/images/png/veriCode.png")}/>
+                    <Image style={styleForgetPassword.imgForgetPassword} source={require("@/assets/images/png/veriCode.png")}/>
                     <Text style={styleForgetPassword.title}>VERIFICATION</Text>
                     <View style={styleForgetPassword.detailView}>
                         <Text style={styleForgetPassword.detailText}>Provide your account’s email for which you want</Text>

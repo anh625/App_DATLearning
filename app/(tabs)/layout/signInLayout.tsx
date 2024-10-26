@@ -51,7 +51,7 @@ const SignInLayout = () => {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styleSignIn.signIn}>
             {/* logo app */}
-            <Image style={styleSignIn.logoApp} source={require("@/images/png/logoApp.png")}></Image>
+            <Image style={styleSignIn.logoApp} source={require("@/assets/images/png/logoApp.png")}></Image>
 
             {/* nhap tai khoan va mat khau */}
             <View style={styleSignIn.ViewInput}>

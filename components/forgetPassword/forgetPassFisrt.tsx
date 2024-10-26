@@ -28,12 +28,12 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
 
     //kiem tra dinh dang Email 
     const handleSecond = () => {
-        if(validateEmail(data)) {funVoid(); setEEmail(true)}
-        else {setErrorMess("hay nhap dung dinh dang Email"); setEEmail(false)};
+        if(validateEmail(data)) {funVoid(); setEEmail(false)}
+        else {setErrorMess("hay nhap dung dinh dang Email"); setEEmail(true)};
     }
     return(
         <View style={styleForgetPassword.forgetPassword}> 
-                    <Image style={styleForgetPassword.imgForgetPassword} source={require("@/images/png/forgetPassword.png")}/>
+                    <Image style={styleForgetPassword.imgForgetPassword} source={require("@/assets/images/png/forgetPassword.png")}/>
                     <Text style={styleForgetPassword.title}>FORGET</Text>
                     <Text style={styleForgetPassword.title}>PASSWORD</Text>
                     <View style={styleForgetPassword.detailView}>
