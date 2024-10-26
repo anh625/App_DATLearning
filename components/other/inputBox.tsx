@@ -2,14 +2,26 @@ import { styleGlobal } from "@/app/(tabs)/css/cssGlobal"
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useRef, useState } from "react"
 import { Text, TextInput, View } from "react-native"
+import Foundation from '@expo/vector-icons/Foundation';
 interface StatusProps {
     variable: string;
     namePlaceholder: string;
     isPass: boolean;
     onChangeText: (value: string) => void;
+    errorMess: string;
+    error: boolean;
 }
 
-const InputBox: React.FC<StatusProps> = ({ variable, namePlaceholder, onChangeText, isPass}) => {
+const InputBox: React.FC<StatusProps> = ({ variable, namePlaceholder, onChangeText, isPass, errorMess, error}) => {
+    //kiem tra trang thai input
+    const [e, setE] = useState<boolean>(false);
+    useEffect(() => {
+        setE(error);
+    },[error])
+
+    //doi borderColor 
+    const [bdColor, setBdColor] = useState("#B3B3B3")
+
     //lay du lieu component con truyen cho component cha
     const [inputValue, setInputValue] = useState(variable)
     const handleChangeText = (value: string) => {
@@ -24,7 +36,6 @@ const InputBox: React.FC<StatusProps> = ({ variable, namePlaceholder, onChangeTe
         setShow( show? false : true );
     }
 
-
     //kiem tra xem la input hay pass?
     useEffect(() => {
         if(!isPass){
@@ -36,9 +47,11 @@ const InputBox: React.FC<StatusProps> = ({ variable, namePlaceholder, onChangeTe
     const [isFocused, setIsFocused] = useState(false);
     const handleFocus = () => {
         setIsFocused(true);
+        setE(false);
     }
     const handleBlur = () => {
         setIsFocused(false);
+        setE(error);
     }
 
     // Tạo ref cho TextInput
@@ -47,12 +60,18 @@ const InputBox: React.FC<StatusProps> = ({ variable, namePlaceholder, onChangeTe
         inputRef.current?.focus();
     }
 
+    //kiem tra input co nhap loi khong
+    useEffect(() => {
+        if(e) setBdColor("red");
+        else setBdColor("#B3B3B3");
+    },[e])
+
     return(
         <View style={styleGlobal.container}>
             <TextInput 
                 ref={inputRef}
                 secureTextEntry={show}
-                style={styleGlobal.input} 
+                style={[styleGlobal.input, {borderColor: bdColor}]} 
                 value={inputValue}
                 onChangeText={handleChangeText}
                 onFocus={handleFocus}
@@ -67,8 +86,10 @@ const InputBox: React.FC<StatusProps> = ({ variable, namePlaceholder, onChangeTe
                 style={styleGlobal.placeholderBlur}
                 onPress={focusInut}
             >{namePlaceholder}</Text>) }
-            {show && isPass && (<Ionicons style={styleGlobal.iconEye} name="eye" size={24} color="#459DE4" onPress={handleEye}/>)}
-            {!show && isPass && (<Ionicons style={styleGlobal.iconEye} name="eye-off" size={24} color="#459DE4" onPress={handleEye}/>)}
+            {show && isPass && !e && (<Ionicons style={styleGlobal.iconEye} name="eye" size={24} color="#459DE4" onPress={handleEye}/>)}
+            {!show && isPass && !e && (<Ionicons style={styleGlobal.iconEye} name="eye-off" size={24} color="#459DE4" onPress={handleEye}/>)}
+            {e && (<Foundation style={styleGlobal.iconEye} name="info" size={24} color="red" />)}
+            {e && (<Text style={styleGlobal.errorMess}>{errorMess}</Text>)}
         </View>
     )
 }

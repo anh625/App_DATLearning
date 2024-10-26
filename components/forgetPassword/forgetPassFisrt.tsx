@@ -9,6 +9,10 @@ interface StatusProps {
     data: string;
 }
 const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
+    //lay error mess cua nguoi dung
+    const [errorMess, setErrorMess] = useState<string>("");
+    const [eEmail, setEEmail] = useState<boolean>(false);
+
     //kiem tra dinh dang mail
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,8 +28,8 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
 
     //kiem tra dinh dang Email 
     const handleSecond = () => {
-        if(validateEmail(data)) funVoid();
-        else {alert("hay nhap dung dinh dang Email")};
+        if(validateEmail(data)) {funVoid(); setEEmail(true)}
+        else {setErrorMess("hay nhap dung dinh dang Email"); setEEmail(false)};
     }
     return(
         <View style={styleForgetPassword.forgetPassword}> 
@@ -37,7 +41,7 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
                         <Text style={styleForgetPassword.detailText}>to reset your password</Text>
                     </View>
                     <View>
-                        <InputBox namePlaceholder="Email" isPass={false} onChangeText={handleChangeText} variable={email} />
+                        <InputBox error={eEmail} namePlaceholder="Email" isPass={false} onChangeText={handleChangeText} variable={email} errorMess={errorMess}/>
                     </View>
                     <View>
                         <ButtonBox name="Continue" funVoid={handleSecond} background="#459DE4" border={0} colorText="#FFFDFD"/>

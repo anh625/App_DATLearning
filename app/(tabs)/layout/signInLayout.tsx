@@ -13,6 +13,11 @@ import SignUpLayout from "./signUpLayout";
 const SignInLayout = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorEmail, setErrorEmail] = useState("");
+    const [eEmail, setEEmail] = useState(false);
+    const [errorPass, setErrorPass] = useState("");
+    const [ePass, setEPass] = useState(false);
+
     //chuyen trang
     const naigation: NavigationProp<RootStackParamList> = useNavigation();
     const moveSignUp = () => {
@@ -24,9 +29,17 @@ const SignInLayout = () => {
     }
 
     const submitSignIn = () => {
-        alert("Email: " + email + "; Password: "+password);
+        if(!validateEmail(email)) {setErrorEmail("Hay nhap dung dinh dang email"); setEEmail(true)}
+        else setEEmail(false);
+        if(password.length == 0) {setErrorPass("Mat khau khong duoc de trong"); setEPass(true)}
+        else setEPass(false);
     }
-
+    //xac nhan email
+    //regex email
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     //ham doi trang thai Toggle
     const [isOnToggle, setIsOnToggle] = useState(true);
@@ -42,8 +55,8 @@ const SignInLayout = () => {
 
             {/* nhap tai khoan va mat khau */}
             <View style={styleSignIn.ViewInput}>
-                <InputBox variable={email} namePlaceholder="Email" onChangeText={setEmail} isPass={false} />
-                <InputBox variable={password} namePlaceholder="Password" onChangeText={setPassword} isPass={true} />
+                <InputBox variable={email} namePlaceholder="Email" onChangeText={setEmail} isPass={false} errorMess={errorEmail} error={eEmail}/>
+                <InputBox variable={password} namePlaceholder="Password" onChangeText={setPassword} isPass={true} errorMess={errorPass} error={ePass}/>
             </View>
 
             {/* lua chon khac gom: luu mat khau va quen mat khau */}

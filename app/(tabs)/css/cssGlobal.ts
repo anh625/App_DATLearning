@@ -22,7 +22,6 @@ export const styleGlobal = StyleSheet.create({
         height: 52,
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: "#B3B3B3",
         fontSize:  20,
         paddingLeft: 15,
         paddingTop: 10,
@@ -39,6 +38,7 @@ export const styleGlobal = StyleSheet.create({
       placeholderBlur: {
         position: 'absolute',
         left: 15,
+        top: 10,
         color: '#A9A9A9', 
         fontSize: 23, 
         fontWeight: "400",
@@ -46,7 +46,14 @@ export const styleGlobal = StyleSheet.create({
     iconEye: {
         position: 'absolute',
         right: 14,
+        top: 15,
       },
+    errorMess: {
+        marginLeft: 15,
+        marginTop:5,
+        fontSize: 12,
+        color: "red",
+    },
 
     // button
     button: {
@@ -121,5 +128,18 @@ export const styleGlobal = StyleSheet.create({
         color: "#459DE4",
     },
 
-    
+    //header
+    header: {
+        height: 65,
+        backgroundColor: "#459DE4",
+        flexDirection:"row",
+        alignItems:"center",
+    },
+
+    //bottonTap
+    textBottomTap: {
+        color: '#0EB1FC', 
+        fontSize:10, 
+        fontWeight:"400"
+    }
 })

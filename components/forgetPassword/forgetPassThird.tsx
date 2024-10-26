@@ -9,18 +9,23 @@ interface StatusProps {
     data: string;
 }
 const ForgetPassThird: React.FC<StatusProps> = ({funVoid, data, getData}) => {
+    const [errorPass, setErrorPass] = useState<string>("");
+    const [errorComPass, setErrorComPass] = useState<string>("");
+    const [ePass, setEPass] = useState<boolean>(false);
+    const [eComPass, setEComPass] = useState<boolean>(false);
+
     const [pass, setPass] = useState("");
     const handlePass = (value: string) => {
         setPass(value);
         getData(value);
     }
     const [comfirmPass, setComfirmPass] = useState("");
-
+    
     const checkPass = () => {
-        if(pass != comfirmPass) alert(data);
+        if(pass.length == 0) {setErrorPass("Mat khau khong khong duoc rong"); setEPass(true); setEComPass(false)}
         else {
-            if(pass.length == 0) alert("Mat khau khong khong duoc rong");
-            else funVoid();
+            if(pass != comfirmPass) {setErrorComPass("Mat khau khong trung khop"); setEComPass(true); setEPass(false)}
+            else {funVoid() ; setEPass(false); setEComPass(false)}
         };
     }
     return(
@@ -33,8 +38,8 @@ const ForgetPassThird: React.FC<StatusProps> = ({funVoid, data, getData}) => {
                         <Text style={styleForgetPassword.detailText}>Set your new password</Text>
                     </View>
                     <View>
-                        <InputBox namePlaceholder="Password" isPass={true} onChangeText={handlePass} variable={pass} />
-                        <InputBox namePlaceholder="Confirm Password" isPass={true} onChangeText={setComfirmPass} variable={comfirmPass} />
+                        <InputBox error={ePass} namePlaceholder="Password" isPass={true} onChangeText={handlePass} variable={pass} errorMess={errorPass}/>
+                        <InputBox error={eComPass} namePlaceholder="Confirm Password" isPass={true} onChangeText={setComfirmPass} variable={comfirmPass} errorMess={errorComPass}/>
                     </View>
                     <View>
                         <ButtonBox name="Update" funVoid={checkPass} background="#459DE4" colorText="#FFFDFD" border={0}/>

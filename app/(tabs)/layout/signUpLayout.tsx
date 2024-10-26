@@ -43,21 +43,30 @@ const SignUpLayout = () => {
     const [name, setName] = useState("")
     const [pass, setPass] = useState("")
     const [comfirmPass, setComfirmPass] = useState("")
+    const [errorEmail, setErrorEmail] = useState("")
+    const [errorName, setErrorName] = useState("")
+    const [errorPass, setErrorPass] = useState("")
+    const [errorComPass, setErrorComPass] = useState("")
+    const [eEmail, setEEmail] = useState(false)
+    const [eName, setEName] = useState(false)
+    const [ePass, setEPass] = useState(false)
+    const [eComPass, setEComPass] = useState(false)
+
 
     const status31 = () => {
-        if(pass != comfirmPass) alert("Mat khau khong trung khop");
+        if(pass.length == 0) {setErrorPass("Mat khau khong khong duoc rong"); setEPass(true); setEComPass(false)}
         else {
-            if(pass.length == 0) alert("Mat khau khong khong duoc rong");
-            else setStatusIndex("1");
+            if(pass != comfirmPass) {setErrorComPass("Mat khau khong trung khop"); setEComPass(true); setEPass(false)}
+            else {setStatusIndex("1"); setEPass(false); setEComPass(false)}
         };
     }
     const status12 = () => {
-        if(validateEmail(email)) setStatusIndex("2");
-        else alert("Nhap sai dinh dang email");
+        if(validateEmail(email)) {setStatusIndex("2"); setEEmail(false)}
+        else {setErrorEmail("Nhap sai dinh dang email"); setEEmail(true)};
     }
     const status23 = () => {
-        if(name.length == 0) alert("Ten khong duoc de trong");
-        else setStatusIndex("3");
+        if(name.length == 0) {setErrorName("Ten khong duoc de trong"); setEName(true)}
+        else {setStatusIndex("3"); setEName(false)};
     }
 
     const status21 = () => {
@@ -88,14 +97,14 @@ const SignUpLayout = () => {
                     {/* inputbox */}
                     {statusIndex == "1" && (
                         <View>
-                            <InputBox variable={email} namePlaceholder='Email' onChangeText={setEmail} isPass={false}/>
+                            <InputBox variable={email} namePlaceholder='Email' onChangeText={setEmail} isPass={false} errorMess={errorEmail} error={eEmail}/>
                             <ButtonBox name='Continue' background='#459DE4' funVoid={status12} border={0} colorText="#FFFDFD"/>
                         </View>
                     )}
 
                     {statusIndex == "2" && (
                         <View>
-                            <InputBox variable={name} namePlaceholder='Full name' onChangeText={setName} isPass={false} />
+                            <InputBox error={eName} variable={name} namePlaceholder='Full name' onChangeText={setName} isPass={false} errorMess={errorName}/>
                             <ButtonBox name='Continue' background='#459DE4' funVoid={status23} border={0} colorText="#FFFDFD"/>
                             <ButtonBox name='Back' background='#838383' funVoid={status21} border={0} colorText="#FFFDFD"/>
                         </View>
@@ -103,8 +112,8 @@ const SignUpLayout = () => {
 
                     {statusIndex == "3" && (
                         <View>
-                            <InputBox variable={pass} namePlaceholder='Password' onChangeText={setPass} isPass={true} />
-                            <InputBox variable={comfirmPass} namePlaceholder='Comfirm Password' onChangeText={setComfirmPass} isPass={true} />
+                            <InputBox error={ePass} variable={pass} namePlaceholder='Password' onChangeText={setPass} isPass={true} errorMess={errorPass}/>
+                            <InputBox error={eComPass} variable={comfirmPass} namePlaceholder='Comfirm Password' onChangeText={setComfirmPass} isPass={true} errorMess={errorComPass}/>
                             <ButtonBox name='Register' background='#459DE4' funVoid={status31} border={0} colorText="#FFFDFD"/>
                             <ButtonBox name='Back' background='#838383' funVoid={status32} border={0} colorText="#FFFDFD"/>
                         </View>
