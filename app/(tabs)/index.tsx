@@ -5,5 +5,6 @@ export default function App() {
   return (
       <MyTabs/>
       //<AppNavigation />
+      ////cai gi do
   );
 }
