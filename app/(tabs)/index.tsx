@@ -5,9 +5,5 @@ export default function App() {
   return (
       <MyTabs/>
       //<AppNavigation />
-      ////cai gi do
-      //test ban 2.0
-      //manh da them
-      //anhnv da them
   );
 }

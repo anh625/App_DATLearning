@@ -132,8 +132,25 @@ export const styleGlobal = StyleSheet.create({
     header: {
         height: 65,
         backgroundColor: "#459DE4",
-        flexDirection:"row",
         alignItems:"center",
+        flexDirection:"row",
+    },
+    backHeader: {
+        marginLeft:29
+    },
+    textHeader:{
+        flex:1,
+        textAlign:"center",
+        fontWeight:"700",
+        fontSize:20,
+        lineHeight:24.2,
+        color: "white"
+    },
+
+    //image Study
+    studyImage:{
+        width:240,
+        height:156.89,
     },
 
     //bottonTap
@@ -141,5 +158,76 @@ export const styleGlobal = StyleSheet.create({
         color: '#0EB1FC', 
         fontSize:10, 
         fontWeight:"400"
-    }
+    },
+
+    //List Levels
+    listLevels: {
+        alignItems:"center",
+        flex:1,
+    },
+
+    levels:{
+        flex:1,
+        marginTop: 19.11,
+    },
+    IViewLevels: {
+        width: 290,
+        height: 125,
+        borderRadius: 5,
+        backgroundColor: "#fff", // Màu nền của View
+        paddingLeft: 20, // Khoảng cách padding bên trong
+        paddingRight:5,
+        marginVertical:11,
+        marginHorizontal: 10,
+        elevation: 5, // Độ cao của đổ bóng (giá trị cao hơn để đổ bóng rõ hơn)
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    imageLevel: {
+        width:67,
+        height:99,
+    },
+    viewDetail: {
+        marginLeft: 28,
+        flex:1,
+    },
+
+    titleLevel: {
+        fontWeight: "500",
+        fontSize:14,
+        lineHeight:16.94,
+        color: "#4C4A54",
+        marginVertical:15,
+    },
+
+    detailLevel: {
+        fontWeight: "500",
+        fontSize:10,
+        lineHeight:12.1,
+        color: "#4C4A54",
+        //textAlign: 'justify',
+    },
+
+    progress: {
+        backgroundColor:"#919191",
+        height: 4,
+    },
+
+    sumPro: {
+        height: 4,
+        width:"100%",
+        backgroundColor: "#D9D9D9",
+    },
+
+    //listTopics
+    viewInsert: {
+        width:285,
+        height:44,
+        borderRadius:10,
+        borderWidth:1,
+        margin:33,
+        flexDirection: "row",
+        alignItems:"center",
+        borderColor:"#BBBBBB",
+    },
 })

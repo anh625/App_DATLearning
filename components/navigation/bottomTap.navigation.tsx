@@ -8,17 +8,17 @@ import SignUpLayout from '@/app/(tabs)/layout/signUpLayout';
 import { styleGlobal } from '@/app/(tabs)/css/cssGlobal';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import ListLevels from '@/app/(tabs)/layout/listLevels';
+import ListLevels from '@/components/vocabulary/listLevels';
 import { NavigationContainer } from '@react-navigation/native';
+import Vocabulary from '@/app/(tabs)/layout/vocabularyLayout';
 const Tab = createBottomTabNavigator();
 
 const MyTabs = () => {
-    const [isDis, setIsDis] = React.useState(true)
-    const handleDis = () => {
-        isDis? setIsDis(false): setIsDis(true);
+    const [isDis, setIsDis] = React.useState(true);
+    const handleDis = (is: boolean) => {
+        setIsDis(is);
     }
   return (
-    <View style={styles.container}>
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
@@ -44,7 +44,7 @@ const MyTabs = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="book" size={size} color={color} />
           ),
-        }}>{() => <ListLevels funvoid={handleDis}/>}</Tab.Screen> 
+        }}>{() => <Vocabulary funVoid={handleDis}/>}</Tab.Screen> 
       <Tab.Screen 
         name="exams" 
         component={SignUpLayout} 
@@ -94,15 +94,6 @@ const MyTabs = () => {
         }} 
       />
     </Tab.Navigator>
-    </View>
   );
 }
 export default MyTabs;
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1, // Đảm bảo container chiếm toàn bộ không gian
-      marginTop: 0, // Đặt marginTop là 0 để loại bỏ khoảng cách
-      borderWidth:1,
-    },
-  });
