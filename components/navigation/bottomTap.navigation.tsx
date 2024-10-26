@@ -10,6 +10,10 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ListLevels from '@/components/vocabulary/listLevels';
 import { NavigationContainer } from '@react-navigation/native';
+import UserInfoScreen from '@/app/(tabs)/layout/userInfo';
+import UserInfoLayout from '@/app/(tabs)/layout/navigationUserInfo';
+
+
 import Vocabulary from '@/app/(tabs)/layout/vocabularyLayout';
 const Tab = createBottomTabNavigator();
 
@@ -83,7 +87,7 @@ const MyTabs = () => {
       />
       <Tab.Screen 
         name="info" 
-        component={SignUpLayout} 
+        component={UserInfoLayout} 
         options={{
           tabBarLabel: ({ focused }) => (
             focused ? <Text style={styleGlobal.textBottomTap}>Cá nhân</Text> : null
