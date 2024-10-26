@@ -7,5 +7,6 @@ export default function App() {
       //<AppNavigation />
       ////cai gi do
       //test ban 2.0
+      //manh da them
   );
 }
