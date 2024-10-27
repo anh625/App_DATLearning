@@ -12,7 +12,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "white",
-         flex: 1
+        flex: 1
     },
     headerImage: {
         height: 267,
@@ -152,11 +152,15 @@ const UserInfoScreen = () => {
                     <FontAwesome6 name="list-check" size={24} color="black" />
                     <Text style={styles.itemText}>Lịch sử kiểm tra</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.itemBody}>
+                <TouchableOpacity 
+                style={styles.itemBody}
+                onPress={() => navigation.navigate("historyRewards")}>
                     <MaterialIcons name="list-alt" size={30} color="black" />
                     <Text style={styles.itemText}>Lịch sử đổi thưởng</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.itemBody}>
+                <TouchableOpacity 
+                style={styles.itemBody}
+                onPress={() => navigation.navigate("signIn")}>
                     <MaterialCommunityIcons name="logout" size={24} color="red" />
                     <Text style={styles.itemText}>Đăng xuất</Text>
                 </TouchableOpacity>
