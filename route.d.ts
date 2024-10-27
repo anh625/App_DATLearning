@@ -4,6 +4,7 @@ type RootStackParamList = {
     forgetPassword: undefined;
     userInfo: undefined;
     historyExams: undefined;
+    historyRewards: undefined;
 };
 declare global {
     namespace ReactNavigation {
