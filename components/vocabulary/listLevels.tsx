@@ -44,7 +44,7 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
         funvoid();
     }
     return(
-        <View style={styleGlobal.listLevels}>
+        <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={true} title="Danh sách các cấp độ" funVoid={() => null}/>
             <Image style={styleGlobal.studyImage} source={require("@/assets/images/png/study.png")} />
             <View style={styleGlobal.levels}>

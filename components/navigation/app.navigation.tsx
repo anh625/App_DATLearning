@@ -14,6 +14,7 @@ const AppNavigation = () => {
                 component={SignUpLayout} />
             <Stack.Screen name="forgetPassword"
                 component={ForgetPassword} />
+            
         </Stack.Navigator>
     );
 }

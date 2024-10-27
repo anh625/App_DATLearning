@@ -5,6 +5,7 @@ export const styleGlobal = StyleSheet.create({
     //main
     mainLayout: {
         flex:1,
+        alignItems:"center",
     },
     //boxInput
     boxInput:{
@@ -161,11 +162,6 @@ export const styleGlobal = StyleSheet.create({
     },
 
     //List Levels
-    listLevels: {
-        alignItems:"center",
-        flex:1,
-    },
-
     levels:{
         flex:1,
         marginTop: 19.11,
@@ -220,14 +216,106 @@ export const styleGlobal = StyleSheet.create({
     },
 
     //listTopics
+    //thanh tim kiem
     viewInsert: {
         width:285,
         height:44,
         borderRadius:10,
         borderWidth:1,
-        margin:33,
+        marginTop:33,
         flexDirection: "row",
         alignItems:"center",
         borderColor:"#BBBBBB",
+    },
+    searchTopic: {
+        marginHorizontal: 16,
+    },
+    inputTopic: {
+        flex:1,
+        marginRight:5,
+    },
+    //danh sach cac topics
+    viewTopic: {
+        flex:1,
+        alignItems:"center",
+        marginTop:11,
+    },
+    iTopic: {
+        marginVertical:12,
+        marginHorizontal:10,
+        height:58,
+        width:290,
+        elevation:5,
+        backgroundColor: "#FFFFFF",
+        borderRadius:5,
+        paddingLeft:14,
+        paddingRight:9,
+        paddingTop:12,
+        paddingBottom: 17,
+        justifyContent: "space-between",
+    },
+    titleTopic:{
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+    },
+
+    //Question
+    viewBodyQues: {
+        width:328,
+        height:569,
+        borderRadius:30,
+        margin:20,
+        elevation: 5,
+        backgroundColor: "#FFFFFF",
+    },
+    viewHeaderQues: {
+        height:152,
+        width: "100%",
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        backgroundColor: "#565CCE",
+        alignItems:"center",
+        justifyContent:"center",
+        marginBottom:32.15,
+    },
+    titleQues: {
+        fontWeight: "500",
+        fontSize:20,
+        lineHeight:24.2,
+        textAlign: "center",
+        color:"white",
+    },
+    viewAnswerQues: {
+        width:290,
+        height:58,
+        borderRadius: 10,
+        elevation: 5,
+        backgroundColor: "white",
+        justifyContent:"center",
+        alignItems:"center",
+        marginBottom: 20
+    },
+    textAnsQues:{
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+    },
+    buttonQues: {
+        right:19,
+        bottom:16,
+        width:94,
+        height:38,
+        borderRadius:20,
+        backgroundColor: "#674FA3",
+        justifyContent:"center",
+        alignItems:"center",
+        position: "absolute",
+    },
+    textButQues: {
+        fontWeight:"700",
+        fontSize:14,
+        lineHeight:16.94,
+        color:"#FFFFFF",
     },
 })
