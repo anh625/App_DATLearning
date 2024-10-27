@@ -33,6 +33,7 @@ const SignInLayout = () => {
         else setEEmail(false);
         if(password.length == 0) {setErrorPass("Mat khau khong duoc de trong"); setEPass(true)}
         else setEPass(false);
+        naigation.navigate("myTabs");
     }
     //xac nhan email
     //regex email

@@ -1,5 +1,4 @@
 import HeaderApp from "@/components/other/header"
-import { ExpoRoot } from "expo-router"
 import { Button, FlatList, Image, ImageSourcePropType, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { styleGlobal } from "../../app/(tabs)/css/cssGlobal"
 import { useState } from "react"

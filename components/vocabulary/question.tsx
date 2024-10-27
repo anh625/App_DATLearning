@@ -2,6 +2,7 @@ import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
 import { Text, TouchableOpacity, View } from "react-native"
 import HeaderApp from "../other/header";
 import { useState } from "react";
+import Answer from "./answer";
 interface StatusProps {
     backVoid: () => void,
 }
@@ -18,6 +19,7 @@ interface Vocabulary {
     answer_b: string;
     answer_c: string;
     answer_d: string;
+    answer_correct: string;
 }
 
 const Question: React.FC<StatusProps>  = ({backVoid}) => {
@@ -29,8 +31,12 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
             answer_b:"Person",
             answer_c:"Boy",
             answer_d:"Please",
+            answer_correct:"answer_a",
         }
     )
+
+    const [isAnswer, setIsAnswer] = useState(false);
+
     return(
         <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={false} title="Hello and goodbye" funVoid={backVoid}/>    
@@ -53,12 +59,13 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
                         <Text style={styleGlobal.textAnsQues}>{vocabularys.answer_d}</Text>
                     </TouchableOpacity>
 
-                    {/* nut xac nhan */}
-                    <TouchableOpacity style={styleGlobal.buttonQues}>
+                    {/* nut sang cau tiep */}
+                    <TouchableOpacity style={styleGlobal.buttonQues} onPress={() => setIsAnswer(true)}>
                         <Text style={styleGlobal.textButQues}>Xác nhận</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            <Answer vocabularys={vocabularys} iVisiable={isAnswer} setIVisiable={setIsAnswer} />
         </View>
     )
 }

@@ -15,6 +15,7 @@ import UserInfoLayout from '@/app/(tabs)/layout/navigationUserInfo';
 
 
 import Vocabulary from '@/app/(tabs)/layout/vocabularyLayout';
+import TestLayout from '@/app/(tabs)/layout/testLayout';
 const Tab = createBottomTabNavigator();
 
 const MyTabs = () => {
@@ -49,9 +50,9 @@ const MyTabs = () => {
             <FontAwesome5 name="book" size={size} color={color} />
           ),
         }}>{() => <Vocabulary funVoid={handleDis}/>}</Tab.Screen> 
+
       <Tab.Screen 
         name="exams" 
-        component={SignUpLayout} 
         options={{
           tabBarLabel: ({ focused }) => (
             focused ? <Text style={styleGlobal.textBottomTap}>Kiểm tra</Text> : null
@@ -59,8 +60,7 @@ const MyTabs = () => {
           tabBarIcon: ({ color, size }) => (
             <Feather name="check-square" size={size} color={color} />
           ),
-        }} 
-      />
+        }}>{() => <TestLayout funVoid={handleDis}/>}</Tab.Screen> 
       <Tab.Screen 
         name="rewards" 
         component={SignUpLayout} 

@@ -16,7 +16,7 @@ interface ITopic {
 }
 
 const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
-    const [sTopic, setSTopic] = useState("");
+    const [seachTopic, setSeachTopic] = useState("");
     const [topics,setTopics] = useState<ITopic[]>([
         {id:1, title:"Hello and goodbye", progress:69},
         {id:2, title:"Hello and goodbye", progress:69},
@@ -35,13 +35,13 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
             <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={false} title="Beginner[A1]" funVoid={backVoid}/>
             <View style={styleGlobal.viewInsert}>
-                <TouchableOpacity onPress={() => alert(sTopic   )}>
+                <TouchableOpacity onPress={() => alert(seachTopic   )}>
                     <FontAwesome style={styleGlobal.searchTopic} name="search" size={24} color="black" />
                 </TouchableOpacity>
                 <TextInput style={styleGlobal.inputTopic}
                     placeholder="Nhập tên chủ đề muốn tìm"
-                    value={sTopic}
-                    onChangeText={setSTopic}
+                    value={seachTopic}
+                    onChangeText={setSeachTopic}
                 />
             </View>
             <View style={styleGlobal.viewTopic}>

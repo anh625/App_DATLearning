@@ -318,4 +318,241 @@ export const styleGlobal = StyleSheet.create({
         lineHeight:16.94,
         color:"#FFFFFF",
     },
+
+    //Answer
+    answerLayout: {
+        width:268,
+        height:543,
+        borderRadius:16,
+        elevation:5,
+        backgroundColor:"#FFFFFF",
+        position:"absolute",
+        top:117,
+        alignItems: "center",
+    },
+    //anh 
+    imageAnswer: {
+        width:194,
+        height:171,
+        borderRadius:20,
+        marginTop:28,
+    },
+    //khung text
+    viewWordAnswer: {
+        width: 193,
+        marginTop:38,
+    },
+    //khung chua word va volumn
+    wordAnswer: {
+        flexDirection:"row",
+        alignItems: "center",
+    },
+    //kieu chu word, meaning, tran
+    textWAnswer:{
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+        marginRight:12,
+        marginBottom:5,
+    },
+    //chu type
+    viewTypeAnswer:{
+        width: 56,
+        height: 22,
+        borderRadius:10,
+        backgroundColor:"#344B5F",
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:7,
+    },
+    textTAnswer:{
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+        color:"white",
+    },
+    //chu used
+    textUAnswer: {
+        fontWeight:"500",
+        fontSize:12,
+        lineHeight:14.52,
+        marginTop:14,
+    },
+    //nut xac nhan
+    butAnswer:{
+        width:71,
+        height:45,
+        borderRadius:30,
+        backgroundColor:"#01AAAF",
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:40,
+    },
+    textButAnswer: {
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+        color:"white",
+    },
+
+
+    //TestLayout
+    //HomeTest
+    imageHomeTest: {
+        width:242,
+        height:159,
+        marginTop:58,
+    },
+    titleTest: {
+        fontWeight:"700",
+        fontSize:30,
+        lineHeight:36.31,
+        color:"#4C4A54",
+        marginTop:42,
+    },
+    butHomeTest: {
+        width:243,
+        height:49,
+        borderRadius:5,
+        elevation:3,
+        backgroundColor:"#41669C",
+        alignItems  :"center",
+        justifyContent:"center",
+        marginTop:111,
+    },
+    textButHomeTest:{
+        fontWeight:"700",
+        fontSize:20,
+        lineHeight:24.2,
+        color:"white",
+    },
+    //exams
+    viewTitleExams: {
+        flexDirection:"row",
+        width:327,
+        justifyContent:"space-between",
+        paddingLeft:20,
+        paddingBottom:9,
+        marginTop:25,
+    },
+    numQuesExams: {
+        fontWeight:"700",
+        fontSize:16,
+        lineHeight:19.36,
+        color:"#4C4A54",
+    },
+    viewTimeExams: {
+        flexDirection:"row",
+        alignItems:"center",
+    },
+    textTimeExams: {
+        fontWeight:"700",
+        fontSize:16,
+        lineHeight:19.36,
+        color:"#459DE4",
+        marginLeft:2,
+    },
+    lineExams: {
+        width:327,
+        height:2,
+        backgroundColor:"#9C9C9C",
+        marginBottom:20,
+    },
+    //bodyExam
+    headerExams: {
+        height:152,
+        width: "100%",
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        backgroundColor: "#60BED8",
+        alignItems:"center",
+        justifyContent:"center",
+        marginBottom:32.15,
+    },
+    butNextExams: {
+        right:19,
+        bottom:16,
+        width:94,
+        height:38,
+        borderRadius:20,
+        justifyContent:"center",
+        alignItems:"center",
+        position: "absolute",
+    },
+    textExams: {
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+    },
+
+    butPreExams: {
+        left:19,
+        bottom:16,
+        width:94,
+        height:38,
+        borderRadius:20,
+        justifyContent:"center",
+        alignItems:"center",
+        position: "absolute",
+    },
+
+    //result
+    evaluateResult: {
+        fontWeight:"700",
+        fontSize:20,
+        lineHeight:24.2,
+        color:"#FF4F4F",
+        marginTop: 14,
+    },
+    viewProcessResult: {
+        width:70,
+        height:70,
+        borderWidth:5,
+        borderColor:"#0EB1FC",
+        borderRadius:70,
+        justifyContent:"center",
+        alignItems:"center",
+        marginTop:25,
+    },
+    correctResult:{
+        marginTop:12,
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+    },
+    butonResult:{
+        marginTop:19,
+        width:91,
+        height:42,
+        borderRadius:5,
+        backgroundColor:"#459DE4",
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    viewAnsResult: {
+        width:331,
+        marginTop: 63,
+    },
+    eachAnsResult:{
+        flexDirection:"row",
+        paddingBottom:10,
+        marginTop: 12,
+        marginLeft:16,
+    },
+    textAnsResult:{
+        fontWeight:"500",
+        fontSize:14,
+        lineHeight:16.94,
+    },
+    titleAnsResult:{
+        fontWeight:"500",
+        fontSize:16,
+        lineHeight:19.36,
+    },
+    lineResult: {
+        width:328,
+        height:2,
+        backgroundColor:"#D9D9D9",
+        alignContent:"center",
+    },
 })
