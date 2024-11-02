@@ -10,10 +10,10 @@ interface StatusProps {
 const HeaderApp: React.FC<StatusProps>  = ({isHome, title, funVoid}) => {
     return(
         <View style={styleGlobal.header}>
-            {!isHome? (<TouchableOpacity onPress={funVoid}>
-                        <AntDesign  style={styleGlobal.backHeader} name="arrowleft" size={30} color="white" />
-                </TouchableOpacity>) : null}
             <Text style={styleGlobal.textHeader}>{title}</Text>
+            {!isHome? (<TouchableOpacity onPress={funVoid} style={styleGlobal.backHeader}>
+                        <AntDesign name="arrowleft" size={30} color="white" />
+                </TouchableOpacity>) : null}
         </View>
     )
 }

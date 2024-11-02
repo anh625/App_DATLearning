@@ -1,9 +1,12 @@
 import HeaderApp from "@/components/other/header"
-import { Button, FlatList, Image, ImageSourcePropType, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { BackHandler, Button, FlatList, Image, ImageSourcePropType, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { styleGlobal } from "../../app/(tabs)/css/cssGlobal"
-import { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { useFocusEffect } from "expo-router"
+import { getInfoApi } from "@/.expo/data"
 interface StatusProps {
-    funvoid: () => void
+    funvoid: () => void;
+    // logout: () => void;
 }
 
 interface ILevel {
@@ -15,6 +18,7 @@ interface ILevel {
 }
 
 const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
+    const [isFocus, setIsFocus] = useState(true);
     const [levels, setLevels] = useState<ILevel[]>([
         { id: 1,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
             detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
@@ -39,9 +43,34 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
             " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
         ])
 
-    const handleTopic = () => {
-        funvoid();
-    }
+    //dang xuat
+    //dong app
+    const closeApp = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+    useFocusEffect(
+        React.useCallback(() => {
+            // Thêm listener cho sự kiện nhấn nút quay lại
+            BackHandler.addEventListener('hardwareBackPress', closeApp);
+            // Dọn dẹp listener khi component không còn được hiển thị
+            return () => {
+                BackHandler.removeEventListener('hardwareBackPress', closeApp);
+            };
+        }, []) // Mảng phụ thuộc rỗng để chỉ chạy khi component được hiển thị
+    );
+
+    // alert infoApi
+    // const handleInfoApi = ()=>{
+    //     const info = getInfoApi();
+    //     if (info && info.data) {
+    //         console.log("Kiểu của info:", typeof info);
+    //         alert(info.data["email"]);
+    //     } else {
+    //        console.log("Info is null or undefined");
+    //     }
+    // }
+
     return(
         <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={true} title="Danh sách các cấp độ" funVoid={() => null}/>
@@ -50,9 +79,10 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
             <FlatList 
                 data={levels}
                 keyExtractor={(item) => item.id +""}
+                showsVerticalScrollIndicator={false} // Ẩn thanh cuộn dọc
                 renderItem={({item}) => {
                     return(
-                        <TouchableOpacity onPress={handleTopic} style={styleGlobal.IViewLevels}>
+                        <TouchableOpacity onPress={()=>funvoid()} style={styleGlobal.IViewLevels}>
                             <Image style={styleGlobal.imageLevel} source={item.image} />
                             <View style={styleGlobal.viewDetail}>
                                 <Text style={styleGlobal.titleLevel}>{item.title}</Text>
@@ -66,7 +96,7 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
                 }}
             />
             </View>
-            {/* <Button title="on/off bottonTap" onPress={funvoid}/> */}
+            {/* <Button title="on/off bottonTap" onPress={handleInfoApi}/> */}
         </View>
     )
 }

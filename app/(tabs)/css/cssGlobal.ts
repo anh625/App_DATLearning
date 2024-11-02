@@ -132,12 +132,16 @@ export const styleGlobal = StyleSheet.create({
     //header
     header: {
         height: 65,
+        width:"100%",
         backgroundColor: "#459DE4",
         alignItems:"center",
         flexDirection:"row",
     },
     backHeader: {
-        marginLeft:29
+        position: "absolute",
+        left: 19, // Căn trái nếu cần thiết
+        top: "-50%",
+        transform: [{translateX:0},{ translateY: 50}], // Di chuyển lên một nửa chiều cao của biểu tượng
     },
     textHeader:{
         flex:1,
@@ -259,7 +263,10 @@ export const styleGlobal = StyleSheet.create({
         fontSize:14,
         lineHeight:16.94,
     },
-
+    //error 
+    textError:{
+        color:"red",
+    },
     //Question
     viewBodyQues: {
         width:328,

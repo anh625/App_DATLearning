@@ -1,4 +1,4 @@
-import { FlatList, Text, TouchableOpacity, View } from "react-native"
+import { BackHandler, FlatList, Text, TouchableOpacity, View } from "react-native"
 import HeaderApp from "../other/header"
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal"
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -55,7 +55,15 @@ const Result: React.FC<StatusProps>  = ({goVoid, backVoid, ans, ques}) => {
         }, 0);
         setCorrect(correctCount);
     },[data])
-
+    //nut quay lai tren may
+    useEffect(()=>{
+        const handleBack = () => {
+            backVoid();
+            return true;
+        }
+        BackHandler.addEventListener("hardwareBackPress",handleBack);
+        return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
+    },[])
     return(
         <View style={styleGlobal.mainLayout} >
             <HeaderApp isHome={false} title="Kết quả" funVoid={backVoid}/>
@@ -73,6 +81,7 @@ const Result: React.FC<StatusProps>  = ({goVoid, backVoid, ans, ques}) => {
 
                 <FlatList data={data}
                     keyExtractor={(item) => item.id+""}
+                    showsVerticalScrollIndicator={false} // Ẩn thanh cuộn dọc
                     renderItem={({item}) => {
                         return(
                             <View>

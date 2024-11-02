@@ -7,7 +7,7 @@ interface StatusProps {
 }
 const HomeTest: React.FC<StatusProps> = ({funvoid}) => {
     return(
-        <View style={styleGlobal.mainLayout} >
+        <View style={[styleGlobal.mainLayout,{borderBlockColor:"red"}]} >
             <HeaderApp isHome={true} title="Kiểm tra" funVoid={() => null}/>
             <Image style={styleGlobal.imageHomeTest} source={require("@/assets/images/png/study.png")} />
             <Text style={styleGlobal.titleTest}>Quizzy App</Text>

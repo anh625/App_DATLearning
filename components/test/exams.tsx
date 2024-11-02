@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native"
+import { BackHandler, Text, TouchableOpacity, View } from "react-native"
 import HeaderApp from "../other/header"
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal"
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -25,6 +25,14 @@ interface Vocabulary {
 }
 
 const Exams: React.FC<StatusProps>  = ({goVoid, backVoid, getData}) => {
+    useEffect(()=>{
+        const handleBack = () => {
+            backVoid();
+            return true;
+        }
+        BackHandler.addEventListener("hardwareBackPress",handleBack);
+        return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
+    },[])
     //cau thu i
     const [index, setIndex] = useState(0);
     const nextQues = () => {

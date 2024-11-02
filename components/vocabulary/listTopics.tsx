@@ -1,8 +1,10 @@
-import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { BackHandler, FlatList, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import HeaderApp from "../other/header";
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { NavigationProp } from "@react-navigation/native";
 
 interface StatusProps {
     goVoid: () => void,
@@ -16,7 +18,8 @@ interface ITopic {
 }
 
 const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
-    const [seachTopic, setSeachTopic] = useState("");
+    const [searchTopic, setSearchTopic] = useState("");
+
     const [topics,setTopics] = useState<ITopic[]>([
         {id:1, title:"Hello and goodbye", progress:69},
         {id:2, title:"Hello and goodbye", progress:69},
@@ -30,24 +33,45 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
         {id:10, title:"Hello and goodbye", progress:69},
     ])
 
+    const [resultSearch, setResultSearch] = useState<ITopic[]>(topics);
+
+    const handleSearch = () => {
+        setResultSearch(topics.filter(stu => stu.title.includes(searchTopic)))
+    }
+
+    useEffect(()=>{
+        setResultSearch(topics.filter(stu => stu.title.includes(searchTopic)))
+    },[searchTopic])
+
+    //ham tro lai
+    useEffect(()=>{
+        const handleBack = () => {
+            backVoid();
+            return true;
+        }
+        BackHandler.addEventListener("hardwareBackPress",handleBack);
+        return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
+    },[])
+
     return(
         <TouchableWithoutFeedback  onPress={() => Keyboard.dismiss()}>
             <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={false} title="Beginner[A1]" funVoid={backVoid}/>
             <View style={styleGlobal.viewInsert}>
-                <TouchableOpacity onPress={() => alert(seachTopic   )}>
+                <TouchableOpacity onPress={handleSearch}>
                     <FontAwesome style={styleGlobal.searchTopic} name="search" size={24} color="black" />
                 </TouchableOpacity>
                 <TextInput style={styleGlobal.inputTopic}
                     placeholder="Nhập tên chủ đề muốn tìm"
-                    value={seachTopic}
-                    onChangeText={setSeachTopic}
+                    value={searchTopic}
+                    onChangeText={setSearchTopic}
                 />
             </View>
             <View style={styleGlobal.viewTopic}>
-            <FlatList 
-                    style={{flex:1,paddingTop:33,}}
-                    data={topics}
+            {resultSearch.length == 0 ? (<Text style={styleGlobal.textError}>Không tìm thấy chủ đề chứa "{searchTopic}"</Text>):
+                (<FlatList 
+                    data={resultSearch}
+                    showsVerticalScrollIndicator={false} // Ẩn thanh cuộn dọc
                     keyExtractor={(item) => item.id + ""}
                     renderItem={({item}) => {
                         return(
@@ -59,7 +83,8 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
                             </TouchableOpacity>
                         )
                     }}
-                />
+                />)
+            }
             </View>
             </View>
         </TouchableWithoutFeedback>

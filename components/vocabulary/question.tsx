@@ -1,7 +1,7 @@
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
-import { Text, TouchableOpacity, View } from "react-native"
+import { BackHandler, Text, TouchableOpacity, View } from "react-native"
 import HeaderApp from "../other/header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Answer from "./answer";
 interface StatusProps {
     backVoid: () => void,
@@ -34,7 +34,14 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
             answer_correct:"answer_a",
         }
     )
-
+    useEffect(()=>{
+        const handleBack = () => {
+            backVoid();
+            return true;
+        }
+        BackHandler.addEventListener("hardwareBackPress",handleBack);
+        return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
+    },[])
     const [isAnswer, setIsAnswer] = useState(false);
 
     return(

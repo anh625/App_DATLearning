@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { BackHandler, StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -9,16 +9,21 @@ import { styleGlobal } from '@/app/(tabs)/css/cssGlobal';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ListLevels from '@/components/vocabulary/listLevels';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 import UserInfoScreen from '@/app/(tabs)/layout/userInfo';
 import UserInfoLayout from '@/app/(tabs)/layout/navigationUserInfo';
-
-
 import Vocabulary from '@/app/(tabs)/layout/vocabularyLayout';
 import TestLayout from '@/app/(tabs)/layout/testLayout';
+import { useNavigation } from 'expo-router';
 const Tab = createBottomTabNavigator();
 
 const MyTabs = () => {
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
+  const logout = ()=>{
+    navigation.navigate("signIn"); // hoặc tên của màn hình stack bạn muốn trở về
+  }
+
+
     const [isDis, setIsDis] = React.useState(true);
     const handleDis = (is: boolean) => {
         setIsDis(is);

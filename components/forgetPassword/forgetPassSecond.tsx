@@ -36,7 +36,7 @@ const ForgetPassSecond: React.FC<StatusProps> = ({funVoid}) => {
     const handleSetTime = () => {
         setSeconds(60)
     }
-
+    
     return(
         <View style={styleForgetPassword.forgetPassword}> 
                     <Image style={styleForgetPassword.imgForgetPassword} source={require("@/assets/images/png/veriCode.png")}/>

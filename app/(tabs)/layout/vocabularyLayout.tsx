@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { View } from "react-native";
 interface StatusProps {
     funVoid: (is: boolean) => void;
+    // logout: () => void;
 }
 
 const Vocabulary: React.FC<StatusProps> = ({funVoid}) => {
@@ -25,7 +26,7 @@ const Vocabulary: React.FC<StatusProps> = ({funVoid}) => {
 
     return(
         <View style={{flex: 1}}>
-            {status == 1 && <ListLevels funvoid={toTopic} />}
+            {status == 1 && <ListLevels funvoid={toTopic}/>}
             {status == 2 && <ListTopics goVoid={toQues} backVoid={toLevel}/>}
             {status == 3 && <Question backVoid={toTopic}/>}
         </View> 
