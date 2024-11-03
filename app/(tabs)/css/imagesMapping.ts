@@ -5,7 +5,7 @@ import rewardBook from "../../../assets/images/png/rewardBook.png";
 import rewardGift from "../../../assets/images/png/rewardGift.png";
 
 const images: { [key: string]: any } = {
-    "Gấu Bông": rewardBear,
+    "Gấu bông": rewardBear,
     "Bút thiên long": rewardPen,
     "Vở thiên long": rewardBook,
     "Hộp quà": rewardGift,

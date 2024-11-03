@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import UserInfoScreen from './userInfo';
-import HistoryExamScreen from './historyExams';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import HistoryExamLayout from './historyExams';
-import HistoryRewardLayout from './historyRewards';
-import SignInLayout from './signInLayout';
+import UserInfoScreen from '@/app/(tabs)/layout/userInfo';
+import HistoryExamLayout from '@/app/(tabs)/layout/historyExams';
+import HistoryRewardLayout from '@/app/(tabs)/layout/historyRewards';
+import SignInLayout from '@/app/(tabs)/layout/signInLayout';
+
 
 const UserInfoLayout = () => {
     const Stack = createNativeStackNavigator<RootStackParamList>();
