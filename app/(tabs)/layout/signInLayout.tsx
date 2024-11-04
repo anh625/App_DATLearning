@@ -16,7 +16,7 @@ import { NetworkInfo } from 'react-native-network-info';
 import { BackHandler } from 'react-native';
 import { RealmObject } from "realm/dist/public-types/namespace";
 import apiClient, { setAuthToken } from "../bearerToken";
-import { setInfoApi } from "@/.expo/data"
+import { setInfoApi } from "@/app/(tabs)/data"
 
 const tokenDB= {
     name: 'Token',
