@@ -97,7 +97,11 @@ const styles = StyleSheet.create({
     },
 });
 
-const UserInfoScreen = () => {
+interface StatusProps{
+    logout: ()=>void;
+}
+
+const UserInfoScreen: React.FC<StatusProps> = ({logout}) => {
     const navigation: NavigationProp<RootStackParamList> = useNavigation();
     return (
         <View style={styles.container}>
@@ -160,7 +164,7 @@ const UserInfoScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity 
                 style={styles.itemBody}
-                onPress={() => navigation.navigate("signIn")}>
+                onPress={logout}>
                     <MaterialCommunityIcons name="logout" size={24} color="red" />
                     <Text style={styles.itemText}>Đăng xuất</Text>
                 </TouchableOpacity>

@@ -5,6 +5,8 @@ type RootStackParamList = {
     userInfo: undefined;
     historyExams: undefined;
     historyRewards: undefined;
+    homerewards: undefined;
+    inforewards: { name: string; image: string; price: number | undefined};
     myTabs: undefined;
 };
 declare global {
