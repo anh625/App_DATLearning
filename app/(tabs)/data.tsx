@@ -39,7 +39,6 @@ export const getUserInfo = (): User | null => {
 
 ///////////////////userGoogle
 // data.ts
-
 // Định nghĩa interface cho thông tin người dùng
 export interface UserGoogle {
     id: string;
@@ -51,13 +50,13 @@ export interface UserGoogle {
 }
 
 // Lưu thông tin người dùng vào trạng thái toàn cục
-let userGoogle: User | null = null;
+let userGoogle: UserGoogle | null = null;
 
-export const setInfoGoogle = (data: User) => {
+export const setInfoGoogle = (data: UserGoogle) => {
     userGoogle = data;
 };
 
 // Hàm lấy thông tin người dùng
-export const getInfoGoogle = (): User | null => {
+export const getInfoGoogle = (): UserGoogle | null => {
     return userGoogle;
 };

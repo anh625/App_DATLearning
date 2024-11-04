@@ -3,6 +3,7 @@ import { BackHandler, Button, FlatList, Image, ImageSourcePropType, ScrollView, 
 import { styleGlobal } from "../../app/(tabs)/css/cssGlobal"
 import React, { useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
+import { getInfoGoogle } from "@/app/(tabs)/data"
 interface StatusProps {
     funvoid: () => void;
     // logout: () => void;
@@ -59,16 +60,7 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
         }, []) // Mảng phụ thuộc rỗng để chỉ chạy khi component được hiển thị
     );
 
-    // alert infoApi
-    // const handleInfoApi = ()=>{
-    //     const info = getInfoApi();
-    //     if (info && info.data) {
-    //         console.log("Kiểu của info:", typeof info);
-    //         alert(info.data["email"]);
-    //     } else {
-    //        console.log("Info is null or undefined");
-    //     }
-    // }
+    
 
     return(
         <View style={styleGlobal.mainLayout}>
@@ -95,7 +87,6 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
                 }}
             />
             </View>
-            {/* <Button title="on/off bottonTap" onPress={handleInfoApi}/> */}
         </View>
     )
 }

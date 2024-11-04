@@ -55,6 +55,15 @@ interface ApiResponse {
     };
 }
 
+// Định nghĩa interface cho thông tin người dùng
+export interface UserGoogle {
+    id: string;
+    email: string;
+    given_name: string;
+    name: string;
+    picture: string;
+    verified_email: boolean;
+}
 
 const SignInLayout = () => {
     const [email, setEmail] = useState("");
@@ -102,7 +111,7 @@ const SignInLayout = () => {
           const response = await fetch("https://www.googleapis.com/userinfo/v2/me",{
             headers: {Authorization: `Bearer ${token}`}
           });
-          const user = await response.json();
+          const user: UserGoogle = await response.json();
           console.log("user:", user);///some thing
           setInfoGoogle(user);
         }catch(error){
@@ -267,6 +276,18 @@ const SignInLayout = () => {
         {isOnToggle? setIsOnToggle(false) : setIsOnToggle(true) }
     }
 
+
+    //test
+    //alert infoApi
+    // const handleInfoApi = ()=>{
+    //     const info = getInfoGoogle();
+    //     if (info) {
+    //         console.log("Kiểu của info:", typeof info);
+    //         alert(info.email);
+    //     } else {
+    //        console.log("Info is null or undefined");
+    //     }
+    // }
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styleSignIn.signIn}>
@@ -294,6 +315,7 @@ const SignInLayout = () => {
                 <ButtonBox name="Sign In" background= "#459DE4" funVoid={submitSignIn} border={0} colorText="#FFFDFD"/>
                 <LineSign haveAccount={true}/>
                 <LoginGoogleBtn funVoid={()=>promtAsync()}/>
+                {/* <Button title="on/off bottonTap" onPress={handleInfoApi}/> */}
             </View>
 
             {/* chuyen sang dang ki */}
