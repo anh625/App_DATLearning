@@ -3,7 +3,6 @@ import { BackHandler, Button, FlatList, Image, ImageSourcePropType, ScrollView, 
 import { styleGlobal } from "../../app/(tabs)/css/cssGlobal"
 import React, { useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
-import { getInfoApi } from "@/.expo/data"
 interface StatusProps {
     funvoid: () => void;
     // logout: () => void;

@@ -12,6 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "platforms": ["android"],
     "ios": {
       "supportsTablet": true
     },
@@ -32,6 +33,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fb47f642-5ac8-465d-b2d6-1638873c6902"
+      }
     }
   }
 }

@@ -16,8 +16,13 @@ import { NetworkInfo } from 'react-native-network-info';
 import { BackHandler } from 'react-native';
 import { RealmObject } from "realm/dist/public-types/namespace";
 import apiClient, { setAuthToken } from "../bearerToken";
-import { setInfoApi } from "@/app/(tabs)/data"
-
+import { getInfoGoogle, setInfoApi, setInfoGoogle } from "@/app/(tabs)/data"
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google"
+import { Button, Platform } from 'react-native';
+import { makeRedirectUri } from 'expo-auth-session';
+const androidClientID = '830574544930-4dmbrvrteas9kamsu3s42scgn1ll08um.apps.googleusercontent.com';
+WebBrowser.maybeCompleteAuthSession();
 const tokenDB= {
     name: 'Token',
     properties: {
@@ -67,7 +72,52 @@ const SignInLayout = () => {
     const navigation: NavigationProp<RootStackParamList> = useNavigation();
     const [isFocus, setIsFocus] = useState(true);
     const [accessToken, setAccessToken] = useState<string>("");
+
+
+
+
+    //login with google
+    const config = {
+        clientId: Platform.select({
+          android: androidClientID,
+        }),
+        redirectUri:  makeRedirectUri({
+                scheme: 'com.anonymous.myapp',
+                path: '/',
+              })
+      }
+      const [request, reponse, promtAsync] = Google.useAuthRequest(config);
+      const handleToken = () => {
+        if(reponse?.type === "success"){
+          const {authentication} = reponse;
+          const token = authentication?.accessToken;
+          console.log("access token: ", token);
+          getUserpProfile(token);
+        }
+      }
     
+      const getUserpProfile = async (token: any) =>{
+        if(!token) return;
+        try{
+          const response = await fetch("https://www.googleapis.com/userinfo/v2/me",{
+            headers: {Authorization: `Bearer ${token}`}
+          });
+          const user = await response.json();
+          console.log("user:", user);///some thing
+          setInfoGoogle(user);
+        }catch(error){
+          console.log(error);
+        }
+      }
+    
+      React.useEffect(()=>{
+        handleToken();
+      },[reponse])
+
+
+
+
+    ///lay info tu api
     const postLogin = async () => {
         setLoading(true);
         try {
@@ -103,6 +153,9 @@ const SignInLayout = () => {
             alert("Có lỗi xảy ra. Vui lòng thử lại.");
         }
     };
+
+
+
     //auto login
     const autoLogin = async () =>{
         type RealmToken = RealmObject<Token> & Token;
@@ -129,7 +182,7 @@ const SignInLayout = () => {
     useEffect(() => {
         autoLogin();
         console.log("token truoc update db:", realm.objects("Token")[0]);
-    }, [isFocus]);
+    }, []);
 
 
 
@@ -165,6 +218,8 @@ const SignInLayout = () => {
             };
         }, []) // Mảng phụ thuộc rỗng để chỉ chạy khi component được hiển thị
     );
+
+
     //chuyen trang
     const moveSignUp = () => {
         navigation.navigate("signUp");
@@ -238,7 +293,7 @@ const SignInLayout = () => {
             <View style={styleSignIn.viewButton}>
                 <ButtonBox name="Sign In" background= "#459DE4" funVoid={submitSignIn} border={0} colorText="#FFFDFD"/>
                 <LineSign haveAccount={true}/>
-                <LoginGoogleBtn funVoid={handleToggle}/>
+                <LoginGoogleBtn funVoid={()=>promtAsync()}/>
             </View>
 
             {/* chuyen sang dang ki */}

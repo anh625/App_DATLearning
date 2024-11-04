@@ -1,5 +1,3 @@
-// data.ts
-
 // Định nghĩa interface cho thông tin người dùng
 export interface Role {
     id: number;
@@ -36,4 +34,30 @@ export const setInfoApi = (data: User) => {
 // Hàm lấy thông tin người dùng
 export const getUserInfo = (): User | null => {
     return userInfo;
+};
+
+
+///////////////////userGoogle
+// data.ts
+
+// Định nghĩa interface cho thông tin người dùng
+export interface UserGoogle {
+    id: string;
+    email: string;
+    given_name: string;
+    name: string;
+    picture: string;
+    verified_email: boolean;
+}
+
+// Lưu thông tin người dùng vào trạng thái toàn cục
+let userGoogle: User | null = null;
+
+export const setInfoGoogle = (data: User) => {
+    userGoogle = data;
+};
+
+// Hàm lấy thông tin người dùng
+export const getInfoGoogle = (): User | null => {
+    return userGoogle;
 };
