@@ -71,8 +71,6 @@ const HomeRewardScreen = () => {
                                         </View>
                                     </TouchableOpacity>
 
-
-
                                 );
                             }}
                             columnWrapperStyle={styles.columnWrapper}
