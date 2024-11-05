@@ -60,3 +60,14 @@ export const setInfoGoogle = (data: UserGoogle) => {
 export const getInfoGoogle = (): UserGoogle | null => {
     return userGoogle;
 };
+
+let funLogout: ()=>void | null;
+
+export const setLogout = (fun: ()=> void) => {
+    funLogout = fun;
+};
+
+// Hàm lấy thông tin người dùng
+export const getLogout = ()=> {
+    return funLogout();
+};

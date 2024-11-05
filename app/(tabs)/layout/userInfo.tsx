@@ -8,6 +8,7 @@ import userInforIcon2 from "../../../assets/images/png/imageInfo2.png";
 import userInforIcon1 from "../../../assets/images/png/imageInfo1.png";
 import userInforIcon3 from "../../../assets/images/png/imageInfo3.png";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { getLogout } from "../data";
 
 const styles = StyleSheet.create({
     container: {
@@ -97,11 +98,7 @@ const styles = StyleSheet.create({
     },
 });
 
-interface StatusProps{
-    logout: ()=>void;
-}
-
-const UserInfoScreen: React.FC<StatusProps> = ({logout}) => {
+const UserInfoScreen = () => {
     const navigation: NavigationProp<RootStackParamList> = useNavigation();
     return (
         <View style={styles.container}>
@@ -164,7 +161,7 @@ const UserInfoScreen: React.FC<StatusProps> = ({logout}) => {
                 </TouchableOpacity>
                 <TouchableOpacity 
                 style={styles.itemBody}
-                onPress={logout}>
+                onPress={() => getLogout()}>
                     <MaterialCommunityIcons name="logout" size={24} color="red" />
                     <Text style={styles.itemText}>Đăng xuất</Text>
                 </TouchableOpacity>

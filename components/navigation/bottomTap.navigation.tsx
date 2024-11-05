@@ -16,14 +16,13 @@ import RewardLayout from './navigationReward';
 import Vocabulary from '@/app/(tabs)/layout/vocabularyLayout';
 import TestLayout from '@/app/(tabs)/layout/testLayout';
 import { useNavigation } from 'expo-router';
+import { setLogout } from '@/app/(tabs)/data';
 
 const Tab = createBottomTabNavigator();
-
 const MyTabs = () => {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
-  const logout = ()=>{
-    navigation.navigate("signIn"); // hoặc tên của màn hình stack bạn muốn trở về
-  }
+
+  setLogout(()=>navigation.navigate("signIn"));
 
   const [isDis, setIsDis] = React.useState(true)
   const handleDis = (is: boolean) => {
@@ -93,6 +92,7 @@ const MyTabs = () => {
         />
         <Tab.Screen
           name="info"
+          component={UserInfoLayout}
           options={{
             tabBarLabel: ({ focused }) => (
               focused ? <Text style={styleGlobal.textBottomTap}>Cá nhân</Text> : null
@@ -100,7 +100,7 @@ const MyTabs = () => {
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person" size={size} color={color} />
             ),
-          }}>{() => <UserInfoScreen logout={logout} />}</Tab.Screen>
+          }}/>
       </Tab.Navigator>
     </View>
   );
