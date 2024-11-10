@@ -1,29 +1,47 @@
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
 import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useState } from "react";
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useEffect, useState } from "react";
+import { Answers, getAnswer } from "@/app/(tabs)/data";
+import { Audio } from 'expo-av';
 interface StatusProps{
-    vocabularys: Vocabulary;
     iVisiable: boolean;
     setIVisiable: (v: boolean) => void;
 }
 
-interface Vocabulary {
-    id: number;
-    word: string;
-    meaning: string;
-    transcription: string;
-    type: string;
-    used_en: string;
-    used_vi: string;
-    answer_a: string;
-    answer_b: string;
-    answer_c: string;
-    answer_d: string;
-    answer_correct: string,
-}
+const Answer:React.FC<StatusProps>  = ({ iVisiable, setIVisiable}) => {
+    const [checkAnswer,setCheckAnswer] = useState<Answers>();
+    useEffect(()=>{
+        if(iVisiable){
+            const handleCheckAnswer = async () =>{
+                const data = await getAnswer() as { code: number; message: string; data: Answers } | null;
+                setCheckAnswer(data?.data);
+            }
+            handleCheckAnswer();
+        }
+    },[iVisiable])
 
-const Answer:React.FC<StatusProps>  = ({vocabularys, iVisiable, setIVisiable}) => {
+    //ham phat ra tieng audio
+    const playSound = async () => {
+        if(checkAnswer?.voice){
+            try {
+            const { sound } = await Audio.Sound.createAsync(
+                { uri: checkAnswer?.voice }
+            );
+            await sound.playAsync();
+            
+            // Giải phóng tài nguyên sau khi âm thanh phát xong
+            sound.setOnPlaybackStatusUpdate((status) => {
+                if (status.isLoaded && status.didJustFinish) {
+                    sound.unloadAsync(); // Giải phóng tài nguyên sau khi phát xong
+                }
+            });          
+            } catch (error) {
+            console.error('Lỗi khi phát âm thanh:', error);
+            }
+        }
+      };
+
     return(
         <Modal
             animationType="slide"
@@ -35,18 +53,18 @@ const Answer:React.FC<StatusProps>  = ({vocabularys, iVisiable, setIVisiable}) =
                     <Image style={styleGlobal.imageAnswer} source={require("@/assets/images/png/answer.png")} />
                     <View style={styleGlobal.viewWordAnswer}> 
                         <View style={styleGlobal.wordAnswer}>
-                            <Text style={styleGlobal.textWAnswer}>{vocabularys.word}</Text>
-                            <TouchableOpacity>
-                                <FontAwesome5 name="volume-down" size={24} color="black" />
+                            <Text style={styleGlobal.textWAnswer}>{checkAnswer?.word}</Text>
+                            <TouchableOpacity onPress={playSound}>
+                                <FontAwesome6 name="volume-low" size={24} color="black" />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styleGlobal.textWAnswer}>{vocabularys.meaning}</Text>
-                        <Text style={styleGlobal.textWAnswer}>{vocabularys.transcription}</Text>
+                        <Text style={styleGlobal.textWAnswer}>{checkAnswer?.meaning}</Text>
+                        <Text style={styleGlobal.textWAnswer}>/{checkAnswer?.pronun}/</Text>
                         <View style={styleGlobal.viewTypeAnswer}>
-                            <Text style={styleGlobal.textTAnswer}>{vocabularys.type}</Text>
+                            <Text style={styleGlobal.textTAnswer}>{checkAnswer?.entype}</Text>
                         </View>
-                        <Text style={styleGlobal.textUAnswer}>{vocabularys.used_en}</Text>
-                        <Text style={styleGlobal.textUAnswer}>{vocabularys.used_vi}</Text>
+                        <Text style={styleGlobal.textUAnswer}>{checkAnswer?.endesc}</Text>
+                        <Text style={styleGlobal.textUAnswer}>{checkAnswer?.viedesc}</Text>
                     </View>
                     <TouchableOpacity style={styleGlobal.butAnswer} onPress={() => setIVisiable(false)}>
                         <Text style={styleGlobal.textButAnswer}>Tiếp</Text>

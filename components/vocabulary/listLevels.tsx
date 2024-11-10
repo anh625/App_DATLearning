@@ -3,45 +3,31 @@ import { BackHandler, Button, FlatList, Image, ImageSourcePropType, ScrollView, 
 import { styleGlobal } from "../../app/(tabs)/css/cssGlobal"
 import React, { useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
-import { getInfoGoogle } from "@/app/(tabs)/data"
+import { ApiTopics, getInfoGoogle, getLevels, getTokenAuthor, setTopics, Topics } from "@/app/(tabs)/data"
+import apiClient, { setAuthToken } from "@/app/(tabs)/bearerToken"
 interface StatusProps {
     funvoid: () => void;
     // logout: () => void;
 }
-
-interface ILevel {
-    id: number;
-    image: ImageSourcePropType;
-    title: string;
-    detail: string;
-    progress: number;
-}
-
+interface Levels{
+    lid: number,
+    lname: string,
+    limage: string,
+    numTopics: number,
+    numWord: number,
+    progress: number,
+};
 const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
     const [isFocus, setIsFocus] = useState(true);
-    const [levels, setLevels] = useState<ILevel[]>([
-        { id: 1,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
-            detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
-            " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
-        { id: 2,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
-                detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
-            " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
-        { id: 3,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
-                detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
-            " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
-            { id: 4,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
-                detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
-            " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
-            { id: 5,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
-                detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
-            " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
-            { id: 6,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
-                detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
-            " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
-            { id: 7,image: require("@/assets/images/png/level.png"), title: "Beginner[A1]", 
-                detail: "Danh sách từ vựng từ Beginner[A1] bao gồm 32 bài học và 615"+
-            " từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF", progress: 69},
-        ])
+    const [levels, setLevels] = useState<Levels[]>([]);
+    const [lids,setLid] = useState<number>();
+    useEffect(() => {
+        const data = getLevels() as { code: number; message: string; data: Levels[] } | null;
+        if (data) {
+            setLevels(data.data);
+        }
+        console.log("level: "+ JSON.stringify(levels))
+    }, []);
 
     //dang xuat
     //dong app
@@ -60,7 +46,24 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
         }, []) // Mảng phụ thuộc rỗng để chỉ chạy khi component được hiển thị
     );
 
-    
+    //post topic
+    const handleTopic = async () =>{
+        if (lids !== undefined) {
+            try{
+                const topics: ApiTopics = await apiClient.get(`/topics/getByLevel?lid=${lids}`)
+                setTopics(topics.data);
+                funvoid();
+            }catch(error){
+                console.error(error);
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (lids !== undefined) {
+            handleTopic();
+        }
+    }, [lids]);
 
     return(
         <View style={styleGlobal.mainLayout}>
@@ -69,15 +72,15 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
             <View style={styleGlobal.levels}>
             <FlatList 
                 data={levels}
-                keyExtractor={(item) => item.id +""}
+                keyExtractor={(item) => item.lid +""}
                 showsVerticalScrollIndicator={false} // Ẩn thanh cuộn dọc
                 renderItem={({item}) => {
                     return(
-                        <TouchableOpacity onPress={()=>funvoid()} style={styleGlobal.IViewLevels}>
-                            <Image style={styleGlobal.imageLevel} source={item.image} />
+                        <TouchableOpacity onPress={()=>setLid(item.lid)} style={styleGlobal.IViewLevels}>
+                            <Image style={styleGlobal.imageLevel} source={{uri: item.limage}} />
                             <View style={styleGlobal.viewDetail}>
-                                <Text style={styleGlobal.titleLevel}>{item.title}</Text>
-                                <Text style={styleGlobal.detailLevel}>{item.detail}</Text>
+                                <Text style={styleGlobal.titleLevel}>{item.lname}</Text>
+                                <Text style={styleGlobal.detailLevel}>Danh sách từ vựng từ {item.lname} bao gồm {item.numTopics} bài học và {item.numWord} từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF</Text>
                                 <View style={styleGlobal.sumPro}>
                                     <View style={[styleGlobal.progress, {width: `${item.progress}%`}]} />
                                 </View>

@@ -3,28 +3,21 @@ import HeaderApp from "../other/header"
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal"
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useState } from "react";
+import { answer, getTests, Questions } from "@/app/(tabs)/data";
+import { index } from "realm";
+import { Audio } from "expo-av";
 
 interface StatusProps {
     goVoid: () => void,
     backVoid: () => void,
-    getData: (ans: string[],ques: Vocabulary[]) => void,
-}
-interface Vocabulary {
-    id: number;
-    word: string;
-    meaning: string;
-    transcription: string;
-    type: string;
-    used_en: string;
-    used_vi: string;
-    answer_a: string;
-    answer_b: string;
-    answer_c: string;
-    answer_d: string;
-    answer_correct: string;
+
 }
 
-const Exams: React.FC<StatusProps>  = ({goVoid, backVoid, getData}) => {
+
+const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
+    const [exam,setExam] = useState<Questions[]>([]);
+    const [ques,setQues] = useState<string>();
+    
     useEffect(()=>{
         const handleBack = () => {
             backVoid();
@@ -33,56 +26,37 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid, getData}) => {
         BackHandler.addEventListener("hardwareBackPress",handleBack);
         return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
     },[])
+
+    useEffect(()=>{
+        handleData();
+    },[])
+    const handleData = () =>{
+        try{
+            const getData = getTests();
+            setExam(getData);
+        }catch(error){
+            console.error(error)
+        }
+    }
+
     //cau thu i
-    const [index, setIndex] = useState(0);
+    const [iExam, setiExam] = useState(0);
     const nextQues = () => {
-        if(index+1 < vocabularys.length) setIndex(index+1)
+        if(iExam+1 < exam.length) setiExam(iExam+1)
         else{
-            getData(listAnswer,vocabularys),
+            //lay du lieu
             goVoid()};
     }
     const backQues = () => {
-        index > 0 && setIndex(index-1);
+        iExam > 0 && setiExam(iExam-1);
     }
 
-
-    //du lieu
-    const [vocabularys, setVocabularys] = useState<Vocabulary[]>([
-        {id:1, word:"Please", meaning: "Vui lòng", transcription: "/pliz/", type:"adverb", 
-            used_en:"Used when we want to politely ask for something", 
-            used_vi:"Được sử dụng khi chúng ta muốn lịch sự yêu cầu một cái gì đó",
-            answer_a:"People",
-            answer_b:"Person",
-            answer_c:"Boy",
-            answer_d:"Please",
-            answer_correct:"answer_a",
-        },
-        {id:2, word:"Please", meaning: "Vui lòng", transcription: "/pliz/", type:"adverb", 
-            used_en:"Used when we want to politely ask for something", 
-            used_vi:"Được sử dụng khi chúng ta muốn lịch sự yêu cầu một cái gì đó",
-            answer_a:"People",
-            answer_b:"Person",
-            answer_c:"Boy",
-            answer_d:"Please",
-            answer_correct:"answer_a",
-        },
-        {id:3, word:"Please", meaning: "Vui lòng", transcription: "/pliz/", type:"adverb", 
-            used_en:"Used when we want to politely ask for something", 
-            used_vi:"Được sử dụng khi chúng ta muốn lịch sự yêu cầu một cái gì đó",
-            answer_a:"People",
-            answer_b:"Person",
-            answer_c:"Boy",
-            answer_d:"Please",
-            answer_correct:"answer_a",
-        },
-    ])
-
     //lay dap an
-    const [listAnswer, setListAnswer] = useState<string[]>(new Array(vocabularys.length).fill(""));
+    const [listAnswer, setListAnswer] = useState<string[]>(new Array(exam.length).fill(""));
     const updateAnswer = (ans: string) =>{
         setListAnswer(preAnswer => {
             const updateItems = [...preAnswer]
-            updateItems[index] = ans;
+            updateItems[iExam] = ans;
             return updateItems;
         })
     }
@@ -106,12 +80,38 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid, getData}) => {
         const secs = time % 60;
         return `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     };
-
+    if(exam.length==0){
+        return(<View></View>)
+    }
+    //ham phat ra tieng audio
+    const playSound = async (link:string) => {
+        if(link){
+            const text = link.split("https");
+            // Phần văn bản trước URL
+            // Phần URL
+            const url = "https" + text[1].trim();
+            try {
+            const { sound } = await Audio.Sound.createAsync(
+                { uri: url }
+            );
+            await sound.playAsync();
+            
+            // Giải phóng tài nguyên sau khi âm thanh phát xong
+            sound.setOnPlaybackStatusUpdate((status) => {
+                if (status.isLoaded && status.didJustFinish) {
+                    sound.unloadAsync(); // Giải phóng tài nguyên sau khi phát xong
+                }
+            });          
+            } catch (error) {
+            console.error('Lỗi khi phát âm thanh:', error);
+            }
+        }
+    };
     return(
         <View style={styleGlobal.mainLayout} >
             <HeaderApp isHome={false} title="" funVoid={backVoid}/>
             <View style={styleGlobal.viewTitleExams}>
-                <Text style={styleGlobal.numQuesExams}>Câu {index+1}/{vocabularys.length}</Text>
+                <Text style={styleGlobal.numQuesExams}>Câu {iExam+1}/{exam.length}</Text>
                 <View style={styleGlobal.viewTimeExams}>
                     <MaterialIcons name="access-time" size={20} color="#459DE4" />
                     <Text style={styleGlobal.textTimeExams}>{formatTime(seconds)}</Text>
@@ -122,50 +122,42 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid, getData}) => {
             {/* cau hoi */}
             <View style={styleGlobal.viewBodyQues} >
                 <View style={styleGlobal.headerExams}>
-                    <Text style={styleGlobal.titleQues}>Từ nào có nghĩa: {vocabularys[index].meaning} </Text>
-                    <Text style={styleGlobal.titleQues}>phiên âm: {vocabularys[index].transcription}</Text>
+                    {exam[iExam].question.includes('https') ? 
+                            <View style={styleGlobal.viewQuesUrl}>
+                                <Text style={styleGlobal.titleQuesUrl}>Hãy chọn từ được nói trong: </Text>
+                                <TouchableOpacity onPress={() => playSound(exam[iExam].question)}>
+                                <Text style={styleGlobal.titleQuesUrl}>Nhấn vào đây để nghe</Text>
+                            </TouchableOpacity> 
+                            </View>
+                            : 
+                        <Text style={styleGlobal.titleQues}>{exam[iExam].question}</Text>}
                 </View>
                 <View style={styleGlobal.mainLayout}>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues} 
-                    onPress={() => updateAnswer("answer_a")}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys[index].answer_a}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues}
-                    onPress={() => updateAnswer("answer_b")}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys[index].answer_b}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues}
-                    onPress={() => updateAnswer("answer_c")}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys[index].answer_c}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues}
-                    onPress={() => updateAnswer("answer_d")}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys[index].answer_d}</Text>
-                    </TouchableOpacity>
-
+                    {exam[iExam].answers.map((answer,index)=>(<TouchableOpacity style={styleGlobal.viewAnswerQues} 
+                    onPress={() => updateAnswer(answer)}>
+                        <Text style={styleGlobal.textAnsQues}>{answer}</Text>
+                    </TouchableOpacity>))}
                     {/* nut quay lai cau truoc */}
-                    {index == 0 && 
+                    {iExam == 0 && 
                         <TouchableOpacity style={[styleGlobal.butPreExams,{backgroundColor: "#AEDEF4",}]} 
                         onPress={backQues}>
                             <Text style={[styleGlobal.textExams,{color:"#4C4A54",}]}>Câu trước</Text>
                         </TouchableOpacity>
                     }
-                    {index != 0 && 
+                    {iExam != 0 && 
                         <TouchableOpacity style={[styleGlobal.butPreExams,{backgroundColor: "#565CCE",}]} 
                         onPress={backQues}>
                             <Text style={[styleGlobal.textExams,{color:"white",}]}>Câu trước</Text>
                         </TouchableOpacity>
                     }
-
-
                     {/* nut xac nhan */}
-                    {index+1 == vocabularys.length && 
+                    {iExam+1 == exam.length && 
                         <TouchableOpacity style={[styleGlobal.butNextExams,{backgroundColor: "#AEDEF4",}]} 
                         onPress={nextQues}>
                             <Text style={[styleGlobal.textExams,{color:"#4C4A54",}]}>Câu trước</Text>
                         </TouchableOpacity>
                     }
-                    {index+1 != vocabularys.length && 
+                    {iExam+1 != exam.length && 
                         <TouchableOpacity style={[styleGlobal.butNextExams,{backgroundColor: "#565CCE",}]} 
                         onPress={nextQues}>
                             <Text style={[styleGlobal.textExams,{color:"white",}]}>Câu trước</Text>

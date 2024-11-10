@@ -5,43 +5,60 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import React, { useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { NavigationProp } from "@react-navigation/native";
+import { ApiQuestions, getTopics, setQuestions, setTidApi, Topics } from "@/app/(tabs)/data";
+import apiClient from "@/app/(tabs)/bearerToken";
 
 interface StatusProps {
     goVoid: () => void,
     backVoid: () => void,
 }
 
-interface ITopic {
-    id:number;
-    title: string;
-    progress: number;
-}
-
 const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
     const [searchTopic, setSearchTopic] = useState("");
+    const [topics,setTopics] = useState<Topics[]>([])
+    const [delay,setDelay] = useState(true);
+    const [tid,setTid] = useState<number>(-1);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getTopics() as { code: number; message: string; data: Topics[] } | null;
+            if (data) {
+                setTopics(data.data);
+                setDelay(false);
+            }
+        };
 
-    const [topics,setTopics] = useState<ITopic[]>([
-        {id:1, title:"Hello and goodbye", progress:69},
-        {id:2, title:"Hello and goodbye", progress:69},
-        {id:3, title:"Hello and goodbye", progress:69},
-        {id:4, title:"Hello and goodbye", progress:69},
-        {id:5, title:"Hello and goodbye", progress:69},
-        {id:6, title:"Hello and goodbye", progress:69},
-        {id:7, title:"Hello and goodbye", progress:69},
-        {id:8, title:"Hello and goodbye", progress:69},
-        {id:9, title:"Hello and goodbye", progress:69},
-        {id:10, title:"Hello and goodbye", progress:69},
-    ])
+        fetchData();
+    }, []);
 
-    const [resultSearch, setResultSearch] = useState<ITopic[]>(topics);
+    
 
+    const [resultSearch, setResultSearch] = useState<Topics[]>(topics);
     const handleSearch = () => {
-        setResultSearch(topics.filter(stu => stu.title.includes(searchTopic)))
+        setResultSearch(topics.filter(stu => stu.tname.includes(searchTopic)));
     }
 
+    useEffect(() => {
+        if (topics) {  // Chỉ gọi handleSearch khi dữ liệu đã được tải xong
+            handleSearch();
+        }
+    }, [searchTopic,topics]);
+
+    //get question
+    const handleQuestion = async () => {
+        try{
+            const getQues: ApiQuestions = await apiClient.get(`/words/getQuestion?tid=${tid}`)
+            setQuestions(getQues.data);
+            setTidApi(tid);
+            goVoid();
+        }catch(error){
+            console.log(error);
+        }
+    }
     useEffect(()=>{
-        setResultSearch(topics.filter(stu => stu.title.includes(searchTopic)))
-    },[searchTopic])
+        if(tid!=-1){
+            handleQuestion();
+        }
+    },[tid])
 
     //ham tro lai
     useEffect(()=>{
@@ -52,7 +69,7 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
         BackHandler.addEventListener("hardwareBackPress",handleBack);
         return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
     },[])
-
+    
     return(
         <TouchableWithoutFeedback  onPress={() => Keyboard.dismiss()}>
             <View style={styleGlobal.mainLayout}>
@@ -68,15 +85,15 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
                 />
             </View>
             <View style={styleGlobal.viewTopic}>
-            {resultSearch.length == 0 ? (<Text style={styleGlobal.textError}>Không tìm thấy chủ đề chứa "{searchTopic}"</Text>):
+            {!delay && resultSearch.length == 0 ? (<Text style={styleGlobal.textError}>Không tìm thấy chủ đề chứa "{searchTopic}"</Text>):
                 (<FlatList 
                     data={resultSearch}
-                    showsVerticalScrollIndicator={false} // Ẩn thanh cuộn dọc
-                    keyExtractor={(item) => item.id + ""}
+                    showsVerticalScrollIndicator={false} 
+                    keyExtractor={(item) => item.tid + ""}
                     renderItem={({item}) => {
                         return(
-                            <TouchableOpacity style={styleGlobal.iTopic} onPress={goVoid}>
-                                <Text style={styleGlobal.titleTopic}>Chủ đề: {item.title}</Text>
+                            <TouchableOpacity style={styleGlobal.iTopic} onPress={()=>setTid(item.tid)}>
+                                <Text style={styleGlobal.titleTopic}>Chủ đề: {item.tname}</Text>
                                 <View style={styleGlobal.sumPro}>
                                     <View style={[styleGlobal.progress, {width: `${item.progress}%`}]} />
                                 </View>

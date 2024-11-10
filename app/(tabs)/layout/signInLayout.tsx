@@ -16,7 +16,7 @@ import { NetworkInfo } from 'react-native-network-info';
 import { BackHandler } from 'react-native';
 import { RealmObject } from "realm/dist/public-types/namespace";
 import apiClient, { setAuthToken } from "../bearerToken";
-import { getInfoGoogle, setInfoApi, setInfoGoogle } from "@/app/(tabs)/data"
+import { ApiLevels, getInfoGoogle, setInfoApi, setInfoGoogle, setLevels, setTokenAuthor } from "@/app/(tabs)/data"
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
 import { Button, Platform } from 'react-native';
@@ -145,10 +145,10 @@ const SignInLayout = () => {
             if (result && result.data && result.data.access_token) {
                 saveOrUpdateToken(result.data.access_token);
                 setAuthToken(result.data.access_token);
+                setTokenAuthor(result.data.access_token);
                 try {
-                    const response = await apiClient.get('/users/my-info');
-                    console.log(JSON.stringify(response.data));
-                    setInfoApi(response.data);
+                    const levels: ApiLevels= await apiClient.get('/levels/getAll');
+                    setLevels(levels.data);
                   } catch (error) {
                     console.error(error);
                 }
@@ -173,11 +173,11 @@ const SignInLayout = () => {
             console.log("da kiem tra xong if");
             setBackApp(true);
             setAuthToken(tokens[0].token);
+            setTokenAuthor(tokens[0].token);
             try {
-                    const response = await apiClient.get('/users/my-info');
-                    console.log(JSON.stringify(response.data))
-                    setInfoApi(response.data);
-                    navigation.navigate("myTabs");
+                const levels: ApiLevels= await apiClient.get('/levels/getAll');
+                setLevels(levels.data);
+                navigation.navigate("myTabs")
                 } catch (error) {
                     setErrorPass("Het han phien dang nhap. Vui long dang nhap lai."); setEPass(true);
             }
@@ -241,26 +241,14 @@ const SignInLayout = () => {
 
 
 
-
-
     const submitSignIn = () => {
         if(!validateEmail(email)) {setErrorEmail("Hay nhap dung dinh dang email"); setEEmail(true); return};
         setEEmail(false);
         if(password.length == 0) {setErrorPass("Mat khau khong duoc de trong"); setEPass(true); return};
         setEPass(false);
         postLogin();  // Gọi hàm này để thực hiện đăng nhập và nhận token
-        realm.write(() => {
-            // Xóa tất cả đối tượng Token
-            realm.delete(realm.objects('Token'));
-            // Thêm token mới
-            realm.create('Token', { _id: 1, token: "newToken" });
-        });
         console.log("token sau update db:", realm.objects("Token"));
     }
-
-
-
-
 
 
     //xac nhan email

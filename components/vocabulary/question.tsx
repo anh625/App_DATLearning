@@ -3,37 +3,17 @@ import { BackHandler, Text, TouchableOpacity, View } from "react-native"
 import HeaderApp from "../other/header";
 import { useEffect, useState } from "react";
 import Answer from "./answer";
+import { ApiAnswer, ApiQuestions, getAnswer, getQuestions, getTidApi, getToLevel, Questions, setAnswer, setQuestions } from "@/app/(tabs)/data";
+import apiClient from "@/app/(tabs)/bearerToken";
+import axios from "axios";
 interface StatusProps {
     backVoid: () => void,
 }
 
-interface Vocabulary {
-    id: number;
-    word: string;
-    meaning: string;
-    transcription: string;
-    type: string;
-    used_en: string;
-    used_vi: string;
-    answer_a: string;
-    answer_b: string;
-    answer_c: string;
-    answer_d: string;
-    answer_correct: string;
-}
-
 const Question: React.FC<StatusProps>  = ({backVoid}) => {
-    const [vocabularys, setVocabularys] = useState<Vocabulary>(
-        {id:1, word:"Please", meaning: "Vui lòng", transcription: "/pliz/", type:"adverb", 
-            used_en:"Used when we want to politely ask for something", 
-            used_vi:"Được sử dụng khi chúng ta muốn lịch sự yêu cầu một cái gì đó",
-            answer_a:"People",
-            answer_b:"Person",
-            answer_c:"Boy",
-            answer_d:"Please",
-            answer_correct:"answer_a",
-        }
-    )
+    const [question,setQuestion] = useState<Questions>();
+    const [uAnswer,setUAnswer] = useState<string>();
+    const [endQues,setEndQues] = useState(false);
     useEffect(()=>{
         const handleBack = () => {
             backVoid();
@@ -44,35 +24,66 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
     },[])
     const [isAnswer, setIsAnswer] = useState(false);
 
+    useEffect(()=>{
+        const fetchData = async () => {
+            const data = await getQuestions() as { code: number; message: string; data: Questions } | null;
+            if (data) {
+                setQuestion(data.data);
+            }
+        };
+        if(!isAnswer) fetchData();
+    },[isAnswer])
+
+    // useEffect(()=>{
+    //     if(uAnswer){
+    //         console.log("data ques:"+JSON.stringify(uAnswer));
+    //         const handleAnswer = async () =>{
+    //             const getAns = await apiClient.get(`/words/checkAnswer?wid=${question?.wid}&word=${uAnswer}}`)
+    //         }
+    //     }
+    // },[uAnswer])
+
+    // next question
+    const nextQuestion = async () =>{
+        try{
+            const nextQues: ApiQuestions = await apiClient.get(`/words/getQuestion?tid=${getTidApi()}&wid=${question?.wid}`)
+            const checkAns: ApiAnswer = await apiClient.get(`/words/checkAnswer?wid=${question?.wid}&word=${uAnswer}`)
+            setQuestions(nextQues.data);
+            setAnswer(checkAns.data);
+            setIsAnswer(true);
+        }catch(error){
+            if (axios.isAxiosError(error) && error.response?.status === 400) {
+                setEndQues(true);
+              } else {
+                console.log("Lỗi khác:", error);
+              }
+        }
+    }
+
+    useEffect(()=>{
+        if(endQues&&!isAnswer){
+            getToLevel();
+        }
+    },[endQues,isAnswer])
     return(
         <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={false} title="Hello and goodbye" funVoid={backVoid}/>    
             <View style={styleGlobal.viewBodyQues} >
                 <View style={styleGlobal.viewHeaderQues}>
-                    <Text style={styleGlobal.titleQues}>Từ nào có nghĩa: {vocabularys.meaning} </Text>
-                    <Text style={styleGlobal.titleQues}>phiên âm: {vocabularys.transcription}</Text>
+                    <Text style={styleGlobal.titleQues}>Từ nào có nghĩa: {question?.question} </Text>
                 </View>
                 <View style={styleGlobal.mainLayout}>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys.answer_a}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys.answer_b}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys.answer_c}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleGlobal.viewAnswerQues}>
-                        <Text style={styleGlobal.textAnsQues}>{vocabularys.answer_d}</Text>
-                    </TouchableOpacity>
-
+                    {question?.answers.map((answer,index)=>(
+                        <TouchableOpacity style={styleGlobal.viewAnswerQues} onPress={()=>setUAnswer(answer)}>
+                            <Text style={styleGlobal.textAnsQues}>{answer}</Text>
+                        </TouchableOpacity>))}
                     {/* nut sang cau tiep */}
-                    <TouchableOpacity style={styleGlobal.buttonQues} onPress={() => setIsAnswer(true)}>
+                    <TouchableOpacity style={styleGlobal.buttonQues} onPress={() => nextQuestion()}>
                         <Text style={styleGlobal.textButQues}>Xác nhận</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <Answer vocabularys={vocabularys} iVisiable={isAnswer} setIVisiable={setIsAnswer} />
+            <Answer iVisiable={isAnswer} setIVisiable={setIsAnswer} />
         </View>
     )
 }

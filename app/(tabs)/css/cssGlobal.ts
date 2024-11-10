@@ -58,7 +58,7 @@ export const styleGlobal = StyleSheet.create({
 
     // button
     button: {
-        width: 271,
+        //width: 271,
         height: 52,
         borderRadius: 5,
         backgroundColor: "#459DE4",
@@ -292,6 +292,19 @@ export const styleGlobal = StyleSheet.create({
         lineHeight:24.2,
         textAlign: "center",
         color:"white",
+        margin:20,
+        justifyContent:"center",
+        alignContent:"center",
+    },
+    viewQuesUrl:{
+        alignItems:"center",
+        margin:20,
+    },
+    titleQuesUrl: {
+        fontWeight: "500",
+        fontSize:20,
+        lineHeight:24.2,
+        color:"white",
     },
     viewAnswerQues: {
         width:290,
@@ -329,13 +342,13 @@ export const styleGlobal = StyleSheet.create({
     //Answer
     answerLayout: {
         width:268,
-        height:543,
         borderRadius:16,
         elevation:5,
         backgroundColor:"#FFFFFF",
         position:"absolute",
         top:117,
         alignItems: "center",
+        paddingBottom:32,
     },
     //anh 
     imageAnswer: {
@@ -353,21 +366,23 @@ export const styleGlobal = StyleSheet.create({
     wordAnswer: {
         flexDirection:"row",
         alignItems: "center",
+        justifyContent:"center",
+        alignSelf: "flex-start",
     },
     //kieu chu word, meaning, tran
     textWAnswer:{
         fontWeight:"500",
         fontSize:14,
         lineHeight:16.94,
-        marginRight:12,
-        marginBottom:5,
+        marginRight:10,
     },
     //chu type
     viewTypeAnswer:{
-        width: 56,
+        paddingHorizontal:5,
         height: 22,
         borderRadius:10,
         backgroundColor:"#344B5F",
+        alignSelf: "flex-start",
         alignItems:"center",
         justifyContent:"center",
         marginTop:7,
@@ -467,7 +482,6 @@ export const styleGlobal = StyleSheet.create({
     },
     //bodyExam
     headerExams: {
-        height:152,
         width: "100%",
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
@@ -561,5 +575,16 @@ export const styleGlobal = StyleSheet.create({
         height:2,
         backgroundColor:"#D9D9D9",
         alignContent:"center",
+    },
+    //signUp
+    comfirmEmailSignin: {
+        justifyContent:"space-evenly",
+        padding:20,
+        width:268,
+        borderRadius:16,
+        elevation:5,
+        backgroundColor:"#FFFFFF",
+        position:"absolute",
+        alignItems: "center",
     },
 })

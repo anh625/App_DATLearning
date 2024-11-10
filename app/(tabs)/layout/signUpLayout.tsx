@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, Button, Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, TextInputBase, TextInputComponent, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Animated, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Text, TextInput, TextInputBase, TextInputComponent, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Status from '@/components/signUp/status';
 import { styleGlobal } from '../css/cssGlobal';
 import InputBox from '@/components/other/inputBox';
@@ -10,7 +10,7 @@ import LoginGoogleBtn from '@/components/other/loginGoogleBtn';
 import { styleSignUp } from '../css/cssSignUp';
 import { NavigationProp } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
-
+import Fontisto from '@expo/vector-icons/Fontisto';
 const SignUpLayout = () => {
     //chuyen sang trang signIn
     const navigation: NavigationProp<RootStackParamList> = useNavigation();
@@ -51,7 +51,8 @@ const SignUpLayout = () => {
     const [eName, setEName] = useState(false)
     const [ePass, setEPass] = useState(false)
     const [eComPass, setEComPass] = useState(false)
-
+    const [iVisible,setIVisible] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const status31 = () => {
         if(pass.length == 0) {setErrorPass("Mat khau khong khong duoc rong"); setEPass(true); setEComPass(false)}
@@ -68,7 +69,6 @@ const SignUpLayout = () => {
         if(name.length == 0) {setErrorName("Ten khong duoc de trong"); setEName(true)}
         else {setStatusIndex("3"); setEName(false)};
     }
-
     const status21 = () => {
         setStatusIndex("1");
     }
@@ -80,6 +80,29 @@ const SignUpLayout = () => {
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
+    };
+
+    //dang ki;
+    const postLogin = async () => {
+        setLoading(true);
+        try {
+            let response = await fetch('http://192.168.1.2:8080/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "name": "anhnv",
+                    "email": "ngovietanh2003thtb@gmail.com",
+                    "password": "12345678"
+                }),
+            });
+            setIVisible(true);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+            alert("Có lỗi xảy ra. Vui lòng thử lại.");
+        }
     };
 
     return(
@@ -114,7 +137,7 @@ const SignUpLayout = () => {
                         <View>
                             <InputBox error={ePass} variable={pass} namePlaceholder='Password' onChangeText={setPass} isPass={true} errorMess={errorPass}/>
                             <InputBox error={eComPass} variable={comfirmPass} namePlaceholder='Comfirm Password' onChangeText={setComfirmPass} isPass={true} errorMess={errorComPass}/>
-                            <ButtonBox name='Register' background='#459DE4' funVoid={status31} border={0} colorText="#FFFDFD"/>
+                            <ButtonBox name='Register' background='#459DE4' funVoid={postLogin} border={0} colorText="#FFFDFD"/>
                             <ButtonBox name='Back' background='#838383' funVoid={status32} border={0} colorText="#FFFDFD"/>
                         </View>
                     )}
@@ -123,6 +146,18 @@ const SignUpLayout = () => {
             {!isShowKeyBroad && <LineSign haveAccount={false}/>}
             {!isShowKeyBroad && <LoginGoogleBtn funVoid={alertVar}/>}
             {!isShowKeyBroad && <QuizAcc haveAccount={true} funVoid={moveSignIn}/>}
+            <Modal
+                visible={iVisible}
+                animationType="slide"
+                transparent={true}>
+                    <View style={[styleGlobal.mainLayout,{justifyContent:"center"}]}>
+                        <View style={styleGlobal.comfirmEmailSignin}>
+                        <Fontisto name="email" size={50} color="black" />
+                        <Text>Vui lòng kiểm tra email</Text>
+                        <ButtonBox name="Xác nhận" background='cyan' colorText='white' funVoid={()=>moveSignIn()} border={0} wid={100} />
+                        </View> 
+                    </View>
+            </Modal>
         </View>
         </TouchableWithoutFeedback>
     )
