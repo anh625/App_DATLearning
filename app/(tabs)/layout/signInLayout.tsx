@@ -176,10 +176,11 @@ const SignInLayout = () => {
         if (tokens.length > 0 && isFocus) {
             console.log("da kiem tra xong if");
             setBackApp(true);
-            setAuthToken(apiClient, tokens[0].token);
             setTokenAuthor(tokens[0].token);
+            const apiInstance = await apiClient();
+            setAuthToken(apiInstance, tokens[0].token);
             try {
-                const apiInstance = await apiClient();
+                
                 const levels: ApiLevels= await apiInstance.get('/levels/getAll');
                 setLevels(levels.data);
                 navigation.navigate("myTabs")
