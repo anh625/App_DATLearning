@@ -311,7 +311,6 @@ export const styleGlobal = StyleSheet.create({
         height:58,
         borderRadius: 10,
         elevation: 5,
-        backgroundColor: "white",
         justifyContent:"center",
         alignItems:"center",
         marginBottom: 20

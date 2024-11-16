@@ -75,7 +75,12 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
                 </View>
                 <View style={styleGlobal.mainLayout}>
                     {question?.answers.map((answer,index)=>(
-                        <TouchableOpacity style={styleGlobal.viewAnswerQues} onPress={()=>setUAnswer(answer)} key={index}>
+                        <TouchableOpacity 
+                        style={[
+                            styleGlobal.viewAnswerQues,
+                            { backgroundColor: answer === uAnswer ? "#D3F9D8" : "#FFFFFF" } // Đổi màu nền
+                        ]}
+                        onPress={()=>setUAnswer(answer)} key={index}>
                             <Text style={styleGlobal.textAnsQues}>{answer}</Text>
                         </TouchableOpacity>))}
                     {/* nut sang cau tiep */}

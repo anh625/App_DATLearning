@@ -16,7 +16,6 @@ export const createApiClient = async () => {
 
 // Hàm để thiết lập token
 export const setAuthToken = (apiClient: any, token: any) => {
-  console.log("setAuor:"+JSON.stringify(apiClient));
   if (token) {
     apiClient.defaults.headers.Authorization = `Bearer ${token}`;
   } else {

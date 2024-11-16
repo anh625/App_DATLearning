@@ -133,7 +133,11 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
                         <Text style={styleGlobal.titleQues}>{exam[iExam].question}</Text>}
                 </View>
                 <View style={styleGlobal.mainLayout}>
-                    {exam[iExam].answers.map((answer,index)=>(<TouchableOpacity style={styleGlobal.viewAnswerQues} 
+                    {exam[iExam].answers.map((answer,index)=>(<TouchableOpacity 
+                    style={[
+                        styleGlobal.viewAnswerQues,
+                        { backgroundColor: answer === listAnswer[iExam] ? "#D3F9D8" : "#FFFFFF" } // Đổi màu nền
+                    ]} 
                     key={index}
                     onPress={() => updateAnswer(answer)}>
                         <Text style={styleGlobal.textAnsQues}>{answer}</Text>
