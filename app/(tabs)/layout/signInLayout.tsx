@@ -16,7 +16,7 @@ import { NetworkInfo } from 'react-native-network-info';
 import { BackHandler } from 'react-native';
 import { RealmObject } from "realm/dist/public-types/namespace";
 import apiClient, { setAuthToken } from "../bearerToken";
-import { ApiLevels, getInfoGoogle, getServerIpAddress, setInfoApi, setInfoGoogle, setLevels, setTokenAuthor } from "@/app/(tabs)/data"
+import { ApiLevels, getInfoGoogle, getServerIpAddress, setInfoApi, setInfoGoogle, setLevels, setOut, setTokenAuthor } from "@/app/(tabs)/data"
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
 import { Button, Platform } from 'react-native';
@@ -142,10 +142,10 @@ const SignInLayout = () => {
                 }),
             });
             const result: ApiResponse = await response.json();
-            console.log("sau post: "+JSON.stringify(result));
+            // console.log("sau post: "+JSON.stringify(result));
             if (result && result.data && result.data.access_token) {
                 saveOrUpdateToken(result.data.access_token);
-                console.log("header: "+result.data.access_token)
+                // console.log("header: "+result.data.access_token)
                 setTokenAuthor(result.data.access_token);
                 const apiInstance = await apiClient(); 
                 setAuthToken(apiInstance, result.data.access_token);
@@ -173,7 +173,7 @@ const SignInLayout = () => {
         type RealmToken = RealmObject<Token> & Token;
         const tokens: Results<RealmToken> = realm.objects<Token>('Token'); // Chỉ định kiểu
         if (tokens.length > 0 && isFocus) {
-            console.log("da kiem tra xong if");
+            // console.log("da kiem tra xong if");
             setBackApp(true);
             setTokenAuthor(tokens[0].token);
             const apiInstance = await apiClient();
@@ -194,8 +194,12 @@ const SignInLayout = () => {
 
     //post api 
     useEffect(() => {
+        setOut(()=>{realm.write(() => {
+            // Xóa tất cả đối tượng Token
+            realm.delete(realm.objects('Token'));
+        });});
         autoLogin();
-        console.log("token truoc update db:", realm.objects("Token")[0]);
+        // console.log("token truoc update db:", realm.objects("Token")[0]);
     }, []);
 
 
@@ -214,13 +218,8 @@ const SignInLayout = () => {
 
     //dong app
     const backSignin = () => {
-        realm.write(() => {
-            // Xóa tất cả đối tượng Token
-            realm.delete(realm.objects('Token'));
-            BackHandler.exitApp();
-            return true;
-        });
-        return false;
+        BackHandler.exitApp();
+        return true;
       };
     useFocusEffect(
         React.useCallback(() => {
@@ -232,7 +231,6 @@ const SignInLayout = () => {
             };
         }, []) // Mảng phụ thuộc rỗng để chỉ chạy khi component được hiển thị
     );
-
 
     //chuyen trang
     const moveSignUp = () => {
@@ -252,10 +250,8 @@ const SignInLayout = () => {
         if(password.length == 0) {setErrorPass("Mat khau khong duoc de trong"); setEPass(true); return};
         setEPass(false);
         postLogin();  // Gọi hàm này để thực hiện đăng nhập và nhận token
-        console.log("token sau update db:", realm.objects("Token"));
+        // console.log("token sau update db:", realm.objects("Token"));
     }
-
-
     //xac nhan email
     //regex email
     const validateEmail = (email: string) => {

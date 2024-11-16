@@ -26,7 +26,7 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
         if (data) {
             setLevels(data.data);
         }
-        console.log("level: "+ JSON.stringify(levels))
+        // console.log("level: "+ JSON.stringify(levels))
     }, []);
 
     //dang xuat

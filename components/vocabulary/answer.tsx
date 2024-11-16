@@ -2,7 +2,7 @@ import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
 import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useEffect, useState } from "react";
-import { Answers, getAnswer } from "@/app/(tabs)/data";
+import { Answers, getAnswer, getEQues, getToLevel } from "@/app/(tabs)/data";
 import { Audio } from 'expo-av';
 interface StatusProps{
     iVisiable: boolean;
@@ -14,8 +14,8 @@ const Answer:React.FC<StatusProps>  = ({ iVisiable, setIVisiable}) => {
     useEffect(()=>{
         if(iVisiable){
             const handleCheckAnswer = async () =>{
-                const data = await getAnswer() as { code: number; message: string; data: Answers } | null;
-                setCheckAnswer(data?.data);
+                const data = await getAnswer();
+                if(data) setCheckAnswer(data);
             }
             handleCheckAnswer();
         }
@@ -66,7 +66,7 @@ const Answer:React.FC<StatusProps>  = ({ iVisiable, setIVisiable}) => {
                         <Text style={styleGlobal.textUAnswer}>{checkAnswer?.endesc}</Text>
                         <Text style={styleGlobal.textUAnswer}>{checkAnswer?.viedesc}</Text>
                     </View>
-                    <TouchableOpacity style={styleGlobal.butAnswer} onPress={() => setIVisiable(false)}>
+                    <TouchableOpacity style={styleGlobal.butAnswer} onPress={() =>{setIVisiable(false); getEQues() && getToLevel();}}>
                         <Text style={styleGlobal.textButAnswer}>Tiếp</Text>
                     </TouchableOpacity>
                 </View>

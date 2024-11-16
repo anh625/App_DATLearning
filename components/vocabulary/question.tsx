@@ -1,11 +1,12 @@
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
-import { BackHandler, Text, TouchableOpacity, View } from "react-native"
+import { BackHandler, Text, ToastAndroid, TouchableOpacity, View } from "react-native"
 import HeaderApp from "../other/header";
 import { useEffect, useState } from "react";
 import Answer from "./answer";
-import { ApiAnswer, ApiQuestions, getAnswer, getQuestions, getTidApi, getToLevel, Questions, setAnswer, setQuestions } from "@/app/(tabs)/data";
+import { ApiAnswer, ApiQuestions, getAnswer, getQuestions, getTidApi, getToLevel, Questions, setAnswer, setEQues, setQuestions } from "@/app/(tabs)/data";
 import apiClient from "@/app/(tabs)/bearerToken";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 interface StatusProps {
     backVoid: () => void,
 }
@@ -15,6 +16,7 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
     const [uAnswer,setUAnswer] = useState<string>();
     const [endQues,setEndQues] = useState(false);
     useEffect(()=>{
+        setEQues(false);
         const handleBack = () => {
             backVoid();
             return true;
@@ -48,24 +50,35 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
         try{
             const apiInstance = await apiClient(); 
             const nextQues: ApiQuestions = await apiInstance.get(`/words/getQuestion?tid=${getTidApi()}&wid=${question?.wid}`)
-            const checkAns: ApiAnswer = await apiInstance.get(`/words/checkAnswer?wid=${question?.wid}&word=${uAnswer}`)
+            const checkAns = await apiInstance<ApiAnswer>(`/words/checkAnswer?wid=${question?.wid}&word=${uAnswer?.trim()}`)
             setQuestions(nextQues.data);
-            setAnswer(checkAns.data);
+            if (checkAns.data.data){
+                setAnswer(checkAns.data.data);
+            }
             setIsAnswer(true);
+            if(checkAns.data.message!="Incorrect answer"){
+                Toast.show({
+                    type: 'success', // success | error | info
+                    text1: checkAns.data.message,
+                    position: 'bottom', // Hoặc top, center
+                });
+            }else{
+                Toast.show({
+                    type: 'error', // success | error | info
+                    text1: checkAns.data.message,
+                    position: 'bottom', // Hoặc top, center
+                });
+            }
+            
         }catch(error){
             if (axios.isAxiosError(error) && error.response?.status === 400) {
-                setEndQues(true);
+                setEQues(true);
+                setIsAnswer(true);
               } else {
                 console.log("Lỗi khác:", error);
               }
         }
     }
-
-    useEffect(()=>{
-        if(endQues&&!isAnswer){
-            getToLevel();
-        }
-    },[endQues,isAnswer])
     return(
         <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={false} title="Hello and goodbye" funVoid={backVoid}/>    
@@ -90,6 +103,7 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
                 </View>
             </View>
             <Answer iVisiable={isAnswer} setIVisiable={setIsAnswer} />
+            <Toast/>
         </View>
     )
 }

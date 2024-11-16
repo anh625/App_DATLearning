@@ -208,6 +208,7 @@ export const getTests = ():Questions[] =>{
 
 //ip dong
 import Constants from 'expo-constants';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export const getServerIpAddress = () => {
   let ip;
@@ -222,4 +223,20 @@ export const getServerIpAddress = () => {
 export interface ApiForget {
     code: number;
     message: string;
+}
+
+let eQues: boolean;
+export const setEQues = (fun: boolean) =>{
+    eQues=fun;
+}
+export const getEQues = () =>{
+    return eQues
+}
+
+let out: () => void;
+export const setOut = (fun: ()=>void) =>{
+    out=fun;
+}
+export const getOut = () =>{
+    return out();
 }
