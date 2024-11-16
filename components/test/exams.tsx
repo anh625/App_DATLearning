@@ -134,6 +134,7 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
                 </View>
                 <View style={styleGlobal.mainLayout}>
                     {exam[iExam].answers.map((answer,index)=>(<TouchableOpacity style={styleGlobal.viewAnswerQues} 
+                    key={index}
                     onPress={() => updateAnswer(answer)}>
                         <Text style={styleGlobal.textAnsQues}>{answer}</Text>
                     </TouchableOpacity>))}

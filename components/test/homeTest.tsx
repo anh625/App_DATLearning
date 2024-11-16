@@ -14,7 +14,8 @@ const HomeTest: React.FC<StatusProps> = ({funvoid}) => {
     const [iVisible,setIVisible] = useState(false)
     const [mess,setMess] = useState<string>()
     const handleExams = async ()=>{
-        const dataTest = await apiClient<ApiTests>("/words/getTest");
+        const apiInstance = await apiClient(); 
+        const dataTest = await apiInstance<ApiTests>("/words/getTest");
         if(dataTest.data.data){
             setTests(dataTest.data.data)
             funvoid();

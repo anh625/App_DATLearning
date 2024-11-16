@@ -50,7 +50,8 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
     const handleTopic = async () =>{
         if (lids !== undefined) {
             try{
-                const topics: ApiTopics = await apiClient.get(`/topics/getByLevel?lid=${lids}`)
+                const apiInstance = await apiClient(); 
+                const topics: ApiTopics = await apiInstance.get(`/topics/getByLevel?lid=${lids}`)
                 setTopics(topics.data);
                 funvoid();
             }catch(error){

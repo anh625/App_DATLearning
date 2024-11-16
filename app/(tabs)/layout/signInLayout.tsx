@@ -16,7 +16,7 @@ import { NetworkInfo } from 'react-native-network-info';
 import { BackHandler } from 'react-native';
 import { RealmObject } from "realm/dist/public-types/namespace";
 import apiClient, { setAuthToken } from "../bearerToken";
-import { ApiLevels, getInfoGoogle, setInfoApi, setInfoGoogle, setLevels, setTokenAuthor } from "@/app/(tabs)/data"
+import { ApiLevels, getInfoGoogle, getServerIpAddress, setInfoApi, setInfoGoogle, setLevels, setTokenAuthor } from "@/app/(tabs)/data"
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
 import { Button, Platform } from 'react-native';
@@ -126,11 +126,13 @@ const SignInLayout = () => {
 
 
 
-    ///lay info tu api
+    ///lay level tu api
     const postLogin = async () => {
         setLoading(true);
+        const ipAddress = getServerIpAddress();
+        console.log("ip: "+ipAddress);
         try {
-            let response = await fetch('http://192.168.1.2:8080/auth/login', {
+            let response = await fetch(`http://${ipAddress}:8080/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -141,13 +143,15 @@ const SignInLayout = () => {
                 }),
             });
             const result: ApiResponse = await response.json();
-            console.log("da post api");
+            console.log("sau post: "+JSON.stringify(result));
             if (result && result.data && result.data.access_token) {
                 saveOrUpdateToken(result.data.access_token);
-                setAuthToken(result.data.access_token);
+                console.log("header: "+result.data.access_token)
                 setTokenAuthor(result.data.access_token);
+                const apiInstance = await apiClient(); 
+                setAuthToken(apiInstance, result.data.access_token);
                 try {
-                    const levels: ApiLevels= await apiClient.get('/levels/getAll');
+                    const levels: ApiLevels= await apiInstance.get('/levels/getAll');
                     setLevels(levels.data);
                   } catch (error) {
                     console.error(error);
@@ -172,10 +176,11 @@ const SignInLayout = () => {
         if (tokens.length > 0 && isFocus) {
             console.log("da kiem tra xong if");
             setBackApp(true);
-            setAuthToken(tokens[0].token);
+            setAuthToken(apiClient, tokens[0].token);
             setTokenAuthor(tokens[0].token);
             try {
-                const levels: ApiLevels= await apiClient.get('/levels/getAll');
+                const apiInstance = await apiClient();
+                const levels: ApiLevels= await apiInstance.get('/levels/getAll');
                 setLevels(levels.data);
                 navigation.navigate("myTabs")
                 } catch (error) {

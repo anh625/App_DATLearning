@@ -1,22 +1,35 @@
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# Prepare
+notejs, jdk, android studio, sdk, setup JAVA_HOME ANDROID_HOME, dooker.
 
 ## Get started
-
+0. Thay đổi chính sách Execution Policy 
+   ```bash
+   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+   ```
+00. Đặt lại chính sách bảo mật nếu cần 
+   ```bash
+   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Restricted
+   ```
 1. Install dependencies
 
    ```bash
    npm install
    ```
-  
-2. Install
+2. Install dependencies
+
+   ```bash
+   npm install expo
+   ```
+3. Install
 
    ```bash
    npx expo install expo-dev-client
    ```
 
-3. Start the app
+4. Start the app
 
    ```bash
     npx expo run:android

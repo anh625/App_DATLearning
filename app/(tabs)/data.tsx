@@ -204,3 +204,16 @@ export const setTests = (data: Questions[]) =>{
 export const getTests = ():Questions[] =>{
     return tests;
 }
+
+
+//ip dong
+import Constants from 'expo-constants';
+
+export const getServerIpAddress = () => {
+  let ip;
+  if (__DEV__) {
+    const debuggerHost = Constants.manifest2?.extra?.expoGo?.debuggerHost;
+    ip = debuggerHost?.split(':')[0]; // Lấy phần IP từ '192.168.x.x:8081'
+  }
+  return ip;
+};

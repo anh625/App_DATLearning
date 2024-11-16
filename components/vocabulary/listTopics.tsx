@@ -46,7 +46,8 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
     //get question
     const handleQuestion = async () => {
         try{
-            const getQues: ApiQuestions = await apiClient.get(`/words/getQuestion?tid=${tid}`)
+            const apiInstance = await apiClient(); 
+            const getQues: ApiQuestions = await apiInstance.get(`/words/getQuestion?tid=${tid}`)
             setQuestions(getQues.data);
             setTidApi(tid);
             goVoid();

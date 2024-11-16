@@ -1,16 +1,22 @@
 import axios from 'axios';
-import { getTokenAuthor } from './data';
+import { getServerIpAddress, getTokenAuthor } from './data';
 
-// Khởi tạo instance của axios
-const apiClient = axios.create({
-  baseURL: 'http://192.168.1.2:8080', // Đổi thành URL API của bạn
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+
+// Hàm khởi tạo axios instance với baseURL động
+export const createApiClient = async () => {
+  const ipAddress = getServerIpAddress();
+  const baseURL = ipAddress ? `http://${ipAddress}:8080` : 'http://localhost:8080'; // Dùng localhost làm fallback
+  return axios.create({
+    baseURL,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
 
 // Hàm để thiết lập token
-export const setAuthToken = (token:any) => {
+export const setAuthToken = (apiClient: any, token: any) => {
+  console.log("setAuor:"+JSON.stringify(apiClient));
   if (token) {
     apiClient.defaults.headers.Authorization = `Bearer ${token}`;
   } else {
@@ -18,4 +24,11 @@ export const setAuthToken = (token:any) => {
   }
 };
 
-export default apiClient;
+export const initializeApiClient = async () => {
+  const apiClient = await createApiClient();
+  const token = await getTokenAuthor();
+  setAuthToken(apiClient, token);
+  return apiClient;
+};
+
+export default initializeApiClient;

@@ -11,6 +11,7 @@ import { styleSignUp } from '../css/cssSignUp';
 import { NavigationProp } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
 import Fontisto from '@expo/vector-icons/Fontisto';
+import { getServerIpAddress } from '../data';
 const SignUpLayout = () => {
     //chuyen sang trang signIn
     const navigation: NavigationProp<RootStackParamList> = useNavigation();
@@ -85,16 +86,17 @@ const SignUpLayout = () => {
     //dang ki;
     const postLogin = async () => {
         setLoading(true);
+        const ipAddress = getServerIpAddress();
         try {
-            let response = await fetch('http://192.168.1.2:8080/auth/register', {
+            let response = await fetch(`http://${ipAddress}:8080`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "name": "anhnv",
-                    "email": "ngovietanh2003thtb@gmail.com",
-                    "password": "12345678"
+                    name: name,
+                    email: email,
+                    password: pass,
                 }),
             });
             setIVisible(true);

@@ -46,8 +46,9 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
     // next question
     const nextQuestion = async () =>{
         try{
-            const nextQues: ApiQuestions = await apiClient.get(`/words/getQuestion?tid=${getTidApi()}&wid=${question?.wid}`)
-            const checkAns: ApiAnswer = await apiClient.get(`/words/checkAnswer?wid=${question?.wid}&word=${uAnswer}`)
+            const apiInstance = await apiClient(); 
+            const nextQues: ApiQuestions = await apiInstance.get(`/words/getQuestion?tid=${getTidApi()}&wid=${question?.wid}`)
+            const checkAns: ApiAnswer = await apiInstance.get(`/words/checkAnswer?wid=${question?.wid}&word=${uAnswer}`)
             setQuestions(nextQues.data);
             setAnswer(checkAns.data);
             setIsAnswer(true);
@@ -74,7 +75,7 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
                 </View>
                 <View style={styleGlobal.mainLayout}>
                     {question?.answers.map((answer,index)=>(
-                        <TouchableOpacity style={styleGlobal.viewAnswerQues} onPress={()=>setUAnswer(answer)}>
+                        <TouchableOpacity style={styleGlobal.viewAnswerQues} onPress={()=>setUAnswer(answer)} key={index}>
                             <Text style={styleGlobal.textAnsQues}>{answer}</Text>
                         </TouchableOpacity>))}
                     {/* nut sang cau tiep */}
