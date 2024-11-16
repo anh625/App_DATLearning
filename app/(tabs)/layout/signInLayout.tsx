@@ -212,7 +212,7 @@ const SignInLayout = () => {
             realm.delete(realm.objects('Token'));
             // Thêm token mới
             realm.create('Token', { _id: 1, token: newToken });
-            console.log('Token đã được thêm vào DB:', newToken);
+            // console.log('Token đã được thêm vào DB:', newToken);
         });
     };
 

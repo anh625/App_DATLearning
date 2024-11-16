@@ -1,6 +1,6 @@
 import { styleForgetPassword } from "@/app/(tabs)/css/cssForgetPassword";
 import { useState } from "react";
-import { Alert, Image, Modal, Text, View } from "react-native";
+import { Alert, Image, Keyboard, Modal, Text, View } from "react-native";
 import InputBox from "../other/inputBox";
 import ButtonBox from "../other/buttonBox";
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
@@ -34,12 +34,13 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
     }
 
     //kiem tra dinh dang Email 
-    const handleSecond = () => {
-        if(validateEmail(data)) {postForget(); setEEmail(false)}
-        else {setErrorMess("hay nhap dung dinh dang Email"); setEEmail(true)};
-    }
+    // const handleSecond = () => {
+    //     if(validateEmail(data)) {postForget(); setEEmail(false)}
+    //     else {setErrorMess("hay nhap dung dinh dang Email"); setEEmail(true)};
+    // }
     const postForget =async ()=>{
         try {
+            Keyboard.dismiss();
             const ipAddress = getServerIpAddress();
             const response = await fetch(`http://${ipAddress}:8080/users/forgotPassword`, {
                 method: 'POST',
@@ -50,14 +51,16 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
                     email: email,
                 }),
             });
-    
             const result: ApiForget = await response.json();
             setCode(result.code);
             setMess(result.message);
+            if(result.code==200) {setIVisible(true); setEEmail(false);}
+            else{
+                setEEmail(true);
+                setErrorMess(result.message);
+            };
         } catch (error) {
             console.error("Error:", error); // Ghi lại lỗi (nếu có)
-        } finally {
-            setIVisible(true); // Đảm bảo luôn chạy
         }
     }
 
@@ -89,11 +92,10 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
                         transparent={true}>
                             <View style={[styleGlobal.mainLayout,{justifyContent:"center"}]}>
                                 <View style={styleGlobal.comfirmEmailSignin}>
-                                {code == 200?<Fontisto name="email" size={50} color="black" />
-                                    :<MaterialIcons name="error-outline" size={50} color="red" />}
-                                <Text>{mess}</Text>
-                                <ButtonBox name="Xác nhận" background='cyan' colorText='white' 
-                                    funVoid={submit} border={0} wid={100} />
+                                    <Fontisto name="email" size={50} color="black" />
+                                    <Text>{mess}</Text>
+                                    <ButtonBox name="Xác nhận" background='cyan' colorText='white' 
+                                        funVoid={submit} border={0} wid={100} />
                                 </View> 
                             </View>
                     </Modal>

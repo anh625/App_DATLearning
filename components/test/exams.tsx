@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { answer, getTests, Questions } from "@/app/(tabs)/data";
 import { index } from "realm";
 import { Audio } from "expo-av";
+import moment from "moment";
 
 interface StatusProps {
     goVoid: () => void,
@@ -17,8 +18,12 @@ interface StatusProps {
 const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
     const [exam,setExam] = useState<Questions[]>([]);
     const [ques,setQues] = useState<string>();
-    
+    const getCurrentTime = moment().format( 'MM/DD/YYYY HH:mm:ss' );
+    const [start,setStart] = useState<string>("");
+    const timeExam = 600;
     useEffect(()=>{
+        handleData();
+        setStart(getCurrentTime);
         const handleBack = () => {
             backVoid();
             return true;
@@ -27,9 +32,7 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
         return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
     },[])
 
-    useEffect(()=>{
-        handleData();
-    },[])
+
     const handleData = () =>{
         try{
             const getData = getTests();
@@ -62,27 +65,43 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
     }
 
     //dong ho dem nguoc
-    const [seconds, setSeconds] = useState(600);
+    const [seconds, setSeconds] = useState(timeExam);
+    const [s, setS] = useState(timeExam);
     useEffect(() => {
+        const currentTime = moment().format( 'MM/DD/YYYY HH:mm:ss' );
+        const time = Math.floor(diffTime(start,currentTime)/1000);
+        if(time){
+            timeExam-time<=0 && goVoid();
+            setSeconds(timeExam-time);
+        }
+        //bo dem
         if (seconds > 0) {
         const interval = setInterval(() => {
-            setSeconds(prevSeconds => prevSeconds - 1);
+            setS(prevSeconds => prevSeconds - 1);
         }, 1000);
         return () => clearInterval(interval);
         }
-        else{
-            goVoid();
-        }
-    }, [seconds]);
+    },[s]);
 
+    //dinh dang thoi gian
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60);
         const secs = time % 60;
         return `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     };
+
+    //su khac biet thoi gian
+    const diffTime = ( then:string, now:string ) => {
+        const ms = moment( now, 'MM/DD/YYYY HH:mm:ss' )
+          .diff( moment( then, 'MM/DD/YYYY HH:mm:ss' ) );
+        return ms;
+    };
+
+    //chua co du lieu thi ko hien gi
     if(exam.length==0){
         return(<View></View>)
     }
+
     //ham phat ra tieng audio
     const playSound = async (link:string) => {
         if(link){
@@ -159,13 +178,13 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
                     {iExam+1 == exam.length && 
                         <TouchableOpacity style={[styleGlobal.butNextExams,{backgroundColor: "#AEDEF4",}]} 
                         onPress={nextQues}>
-                            <Text style={[styleGlobal.textExams,{color:"#4C4A54",}]}>Câu trước</Text>
+                            <Text style={[styleGlobal.textExams,{color:"#4C4A54",}]}>Câu sau</Text>
                         </TouchableOpacity>
                     }
                     {iExam+1 != exam.length && 
                         <TouchableOpacity style={[styleGlobal.butNextExams,{backgroundColor: "#565CCE",}]} 
                         onPress={nextQues}>
-                            <Text style={[styleGlobal.textExams,{color:"white",}]}>Câu trước</Text>
+                            <Text style={[styleGlobal.textExams,{color:"white",}]}>Câu sau</Text>
                         </TouchableOpacity>
                     }
                 </View>
