@@ -1,8 +1,13 @@
 import { styleForgetPassword } from "@/app/(tabs)/css/cssForgetPassword";
 import { useState } from "react";
-import { Alert, Image, Text, View } from "react-native";
+import { Alert, Image, Modal, Text, View } from "react-native";
 import InputBox from "../other/inputBox";
 import ButtonBox from "../other/buttonBox";
+import { styleGlobal } from "@/app/(tabs)/css/cssGlobal";
+import { Fontisto } from "@expo/vector-icons";
+import { ApiForget, getServerIpAddress } from "@/app/(tabs)/data";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
 interface StatusProps {
     funVoid: () => void;
     getData: (value: string) => void;
@@ -12,7 +17,9 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
     //lay error mess cua nguoi dung
     const [errorMess, setErrorMess] = useState<string>("");
     const [eEmail, setEEmail] = useState<boolean>(false);
-
+    const [iVisible,setIVisible] = useState(false);
+    const [code,setCode] = useState<number>();
+    const [mess,setMess] = useState<string>();
     //kiem tra dinh dang mail
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,8 +35,37 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
 
     //kiem tra dinh dang Email 
     const handleSecond = () => {
-        if(validateEmail(data)) {funVoid(); setEEmail(false)}
+        if(validateEmail(data)) {postForget(); setEEmail(false)}
         else {setErrorMess("hay nhap dung dinh dang Email"); setEEmail(true)};
+    }
+    const postForget =async ()=>{
+        try {
+            const ipAddress = getServerIpAddress();
+            const response = await fetch(`http://${ipAddress}:8080/users/forgotPassword`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                }),
+            });
+    
+            const result: ApiForget = await response.json();
+            setCode(result.code);
+            setMess(result.message);
+        } catch (error) {
+            console.error("Error:", error); // Ghi lại lỗi (nếu có)
+        } finally {
+            setIVisible(true); // Đảm bảo luôn chạy
+        }
+    }
+
+    const submit = ()=>{
+        if(code==200){
+            funVoid();
+        }
+        setIVisible(false)
     }
     return(
         <View style={styleForgetPassword.forgetPassword}> 
@@ -41,11 +77,26 @@ const ForgetPassFirst: React.FC<StatusProps> = ({funVoid , data, getData}) => {
                         <Text style={styleForgetPassword.detailText}>to reset your password</Text>
                     </View>
                     <View>
-                        <InputBox error={eEmail} namePlaceholder="Email" isPass={false} onChangeText={handleChangeText} variable={email} errorMess={errorMess}/>
+                        <InputBox error={eEmail} namePlaceholder="Email" isPass={false} 
+                            onChangeText={handleChangeText} variable={email} errorMess={errorMess}/>
                     </View>
                     <View>
-                        <ButtonBox name="Continue" funVoid={handleSecond} background="#459DE4" border={0} colorText="#FFFDFD"/>
+                        <ButtonBox name="Xác nhận" funVoid={postForget} background="#459DE4" border={0} colorText="#FFFDFD"/>
                     </View>
+                    <Modal
+                        visible={iVisible}
+                        animationType="slide"
+                        transparent={true}>
+                            <View style={[styleGlobal.mainLayout,{justifyContent:"center"}]}>
+                                <View style={styleGlobal.comfirmEmailSignin}>
+                                {code == 200?<Fontisto name="email" size={50} color="black" />
+                                    :<MaterialIcons name="error-outline" size={50} color="red" />}
+                                <Text>{mess}</Text>
+                                <ButtonBox name="Xác nhận" background='cyan' colorText='white' 
+                                    funVoid={submit} border={0} wid={100} />
+                                </View> 
+                            </View>
+                    </Modal>
         </View>
     )
 }

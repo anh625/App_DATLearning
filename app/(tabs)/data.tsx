@@ -217,3 +217,9 @@ export const getServerIpAddress = () => {
   }
   return ip;
 };
+
+//forget pass
+export interface ApiForget {
+    code: number;
+    message: string;
+}

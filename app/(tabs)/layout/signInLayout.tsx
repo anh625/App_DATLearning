@@ -130,7 +130,6 @@ const SignInLayout = () => {
     const postLogin = async () => {
         setLoading(true);
         const ipAddress = getServerIpAddress();
-        console.log("ip: "+ipAddress);
         try {
             let response = await fetch(`http://${ipAddress}:8080/auth/login`, {
                 method: 'POST',
