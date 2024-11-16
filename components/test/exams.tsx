@@ -17,7 +17,6 @@ interface StatusProps {
 
 const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
     const [exam,setExam] = useState<Questions[]>([]);
-    const [ques,setQues] = useState<string>();
     const getCurrentTime = moment().format( 'MM/DD/YYYY HH:mm:ss' );
     const [start,setStart] = useState<string>("");
     const timeExam = 600;

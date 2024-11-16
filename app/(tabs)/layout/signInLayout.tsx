@@ -23,15 +23,29 @@ import { Button, Platform } from 'react-native';
 import { makeRedirectUri } from 'expo-auth-session';
 const androidClientID = '830574544930-4dmbrvrteas9kamsu3s42scgn1ll08um.apps.googleusercontent.com';
 WebBrowser.maybeCompleteAuthSession();
-const tokenDB= {
-    name: 'Token',
+const TokenSchema = {
+    name: "Token",
+    primaryKey: "_id",
     properties: {
-        _id: 'int',
-        token: 'string',
+      _id: "int",
+      token: "string",
     },
-    primaryKey: '_id',
-};
-
+  };
+  
+  const UserSchema = {
+    name: "User",
+    primaryKey: "_id",
+    properties: {
+      _id: "int",
+      uName: "string",
+      uPass: "string",
+    },
+  };
+  interface U {
+    _id: number;
+    uName: string;
+    uPass: string;
+  }
 interface Token {
     _id: number;
     token: string;
@@ -75,15 +89,15 @@ const SignInLayout = () => {
     const [backApp, setBackApp] =useState(false);
     //const realm = new Realm({schema: [tokenDB]});
     //gọi api login
-    const realm = new Realm({ schema: [tokenDB] });
-    const [loading, setLoading] = useState(false);
-    const [getToken, setGetTokens] = useState();
+    const realm = new Realm({ schema: [TokenSchema,UserSchema] });
+    const [loading, setLoading] = useState(true);
     const navigation: NavigationProp<RootStackParamList> = useNavigation();
-    const [isFocus, setIsFocus] = useState(true);
-    const [accessToken, setAccessToken] = useState<string>("");
 
-
-
+    //ham doi trang thai Toggle
+    const [isOnToggle, setIsOnToggle] = useState(true);
+    const handleToggle = () => {
+        {isOnToggle? setIsOnToggle(false) : setIsOnToggle(true) }
+    }
 
     //login with google
     const config = {
@@ -144,7 +158,7 @@ const SignInLayout = () => {
             const result: ApiResponse = await response.json();
             // console.log("sau post: "+JSON.stringify(result));
             if (result && result.data && result.data.access_token) {
-                saveOrUpdateToken(result.data.access_token);
+                saveOrUpdateToken(result.data.access_token, email, password);
                 // console.log("header: "+result.data.access_token)
                 setTokenAuthor(result.data.access_token);
                 const apiInstance = await apiClient(); 
@@ -172,20 +186,31 @@ const SignInLayout = () => {
     const autoLogin = async () =>{
         type RealmToken = RealmObject<Token> & Token;
         const tokens: Results<RealmToken> = realm.objects<Token>('Token'); // Chỉ định kiểu
-        if (tokens.length > 0 && isFocus) {
+        const userDB = realm.objects("User");
+        if (tokens.length > 0) {
             // console.log("da kiem tra xong if");
             setBackApp(true);
             setTokenAuthor(tokens[0].token);
             const apiInstance = await apiClient();
             setAuthToken(apiInstance, tokens[0].token);
             try {
-                
                 const levels: ApiLevels= await apiInstance.get('/levels/getAll');
                 setLevels(levels.data);
                 navigation.navigate("myTabs")
                 } catch (error) {
                     setErrorPass("Het han phien dang nhap. Vui long dang nhap lai."); setEPass(true);
             }
+        };
+        if (userDB.length > 0){
+            const e = realm.objectForPrimaryKey<U>("User",1);
+            if(e?.uName && e?.uPass){
+                setEmail(e?.uName);
+                setPassword(e?.uPass);
+                setLoading(false);
+            }
+        }
+        else{
+            setLoading(false);
         }
     }
 
@@ -197,7 +222,7 @@ const SignInLayout = () => {
         setOut(()=>{realm.write(() => {
             // Xóa tất cả đối tượng Token
             realm.delete(realm.objects('Token'));
-        });});
+        });setLoading(false)});
         autoLogin();
         // console.log("token truoc update db:", realm.objects("Token")[0]);
     }, []);
@@ -206,12 +231,15 @@ const SignInLayout = () => {
 
 
     //Luu token
-    const saveOrUpdateToken = (newToken: any) => {
+    const saveOrUpdateToken = (newToken: any,name: any, pass: any) => {
         realm.write(() => {
             // Xóa tất cả đối tượng Token
             realm.delete(realm.objects('Token'));
+            realm.delete(realm.objects('User'));
             // Thêm token mới
             realm.create('Token', { _id: 1, token: newToken });
+            if(isOnToggle)
+            realm.create('User', { _id: 1, uName: name, uPass: pass});
             // console.log('Token đã được thêm vào DB:', newToken);
         });
     };
@@ -259,12 +287,6 @@ const SignInLayout = () => {
         return emailRegex.test(email);
     };
 
-    //ham doi trang thai Toggle
-    const [isOnToggle, setIsOnToggle] = useState(true);
-    const handleToggle = () => {
-        {isOnToggle? setIsOnToggle(false) : setIsOnToggle(true) }
-    }
-
 
     //test
     //alert infoApi
@@ -277,6 +299,11 @@ const SignInLayout = () => {
     //        console.log("Info is null or undefined");
     //     }
     // }
+    if(loading){
+        return(
+            <></>
+        )
+    }
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styleSignIn.signIn}>
