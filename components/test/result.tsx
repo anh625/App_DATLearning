@@ -5,12 +5,12 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useState } from "react";
 import Vocabulary from "@/app/(tabs)/layout/vocabularyLayout";
 import Svg, { Circle } from 'react-native-svg';
+import { getResultTest } from "@/app/(tabs)/data";
+import { Audio } from "expo-av";
 
 interface StatusProps {
     goVoid: () => void,
     backVoid: () => void,
-    ans: string[],
-    ques: Vocabulary[],
 }
 interface Vocabulary {
     id: number;
@@ -27,36 +27,14 @@ interface Vocabulary {
     answer_correct: string;
 }
 
-const Result: React.FC<StatusProps>  = ({goVoid, backVoid, ans, ques}) => {
-    //tron du lieu
-    const [data, setData] = useState<(Vocabulary & {useAnswer: string})[]>([]);
-    useEffect(()=>{
-        const combieData = ques.map((question,index) => ({
-            ...question,
-            useAnswer: ans[index] || "",
-        }));
-        setData(combieData);
-    },[ques,ans])
-
-    //xu ly du lieu
-    //tinh so cau da lam
-    const [progress, setProgress] = useState<number>(0)
-    useEffect(()=>{
-        const answeredCount = ans.filter(item => item !== "").length;
-        const answeredPercentage = Math.trunc((answeredCount / data.length) * 100);
-        setProgress(answeredPercentage);
-    },[data])
-
-    //tinh so cau dung
-    const [correct, setCorrect] = useState<number>(0)
-    useEffect(()=>{
-        const correctCount = data.reduce((count, item) => {
-            return count + (item.useAnswer === item.answer_correct ? 1 : 0);
-        }, 0);
-        setCorrect(correctCount);
-    },[data])
+const Result: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
+    const result = getResultTest();
+    const [progress,setProgress] = useState<number>(0);
     //nut quay lai tren may
     useEffect(()=>{
+        if(result?.data.numCorrectques && result?.data.numQues){
+            setProgress(Math.floor(result?.data.numCorrectques / result?.data.numQues * 100));
+        }
         const handleBack = () => {
             backVoid();
             return true;
@@ -64,6 +42,35 @@ const Result: React.FC<StatusProps>  = ({goVoid, backVoid, ans, ques}) => {
         BackHandler.addEventListener("hardwareBackPress",handleBack);
         return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
     },[])
+
+    //ham phat ra tieng audio
+    const playSound = async (link:string) => {
+        if(link){
+            const text = link.split("https");
+            // Phần văn bản trước URL
+            // Phần URL
+            const url = "https" + text[1].trim();
+            try {
+            const { sound } = await Audio.Sound.createAsync(
+                { uri: url }
+            );
+            await sound.playAsync();
+            
+            // Giải phóng tài nguyên sau khi âm thanh phát xong
+            sound.setOnPlaybackStatusUpdate((status) => {
+                if (status.isLoaded && status.didJustFinish) {
+                    sound.unloadAsync(); // Giải phóng tài nguyên sau khi phát xong
+                }
+            });          
+            } catch (error) {
+            console.error('Lỗi khi phát âm thanh:', error);
+            }
+        }
+    };
+
+    if(!result){
+        return(<></>);
+    }
     return(
         <View style={styleGlobal.mainLayout} >
             <HeaderApp isHome={false} title="Kết quả" funVoid={backVoid}/>
@@ -71,7 +78,7 @@ const Result: React.FC<StatusProps>  = ({goVoid, backVoid, ans, ques}) => {
             <View style={styleGlobal.viewProcessResult}>
                 <Text style={[styleGlobal.textAnsResult, {color:"#0EB1FC"}]}>{progress}%</Text>
             </View>
-            <Text style={styleGlobal.correctResult}>Bạn đã trả lời đúng {correct}/{data.length}</Text>
+            <Text style={styleGlobal.correctResult}>Bạn đã trả lời đúng {result?.data.numCorrectques}/{result?.data.numQues}</Text>
             <TouchableOpacity style={styleGlobal.butonResult}
             onPress={goVoid}>
                 <Text style={[styleGlobal.textAnsResult,{color:"white"}]}>Kết thúc</Text>
@@ -79,20 +86,28 @@ const Result: React.FC<StatusProps>  = ({goVoid, backVoid, ans, ques}) => {
             <View style={styleGlobal.viewAnsResult}>
                 <Text style={styleGlobal.titleAnsResult}>Đáp án chi tiết</Text>
 
-                <FlatList data={data}
-                    keyExtractor={(item) => item.id+""}
+                <FlatList data={result?.data.testDetail}
+                    keyExtractor={(item) => item.wid+""}
                     showsVerticalScrollIndicator={false} // Ẩn thanh cuộn dọc
-                    renderItem={({item}) => {
+                    renderItem={({item,index}) => {
                         return(
-                            <View>
+                            <View style={{backgroundColor:item.correct? "#00ff031a":"#ff00001c"}}>
                                 <View style={styleGlobal.eachAnsResult}>
-                                    <Text style={styleGlobal.textAnsResult}>{item.id}.</Text>
-                                    <View style={{marginLeft:5}}>
-                                        <Text style={styleGlobal.textAnsResult}>Question: </Text>
+                                    <Text style={styleGlobal.textAnsResult}>{index+1}.</Text>
+                                    <View style={styleGlobal.textQuesResult}>
+                                        {item.question.includes('https') ? 
+                                                <View>
+                                                    <Text style={styleGlobal.textAnsResult}>Question: Hãy chọn từ được nói trong: </Text>
+                                                    <TouchableOpacity onPress={() => playSound(item.question)}>
+                                                    <Text style={styleGlobal.textAnsResult}>Nhấn vào đây để nghe</Text>
+                                                </TouchableOpacity> 
+                                                </View>
+                                                : 
+                                                <Text style={styleGlobal.textAnsResult}>Question: {item.question} </Text>}                                        
                                         <Text style={[styleGlobal.textAnsResult,{color:"#0545a2"}]}
-                                            >Đáp án đúng: {item[item.answer_correct as keyof Vocabulary]} </Text>
+                                            >Đáp án đúng: {item.systemAnswer} </Text>
                                         <Text style={[styleGlobal.textAnsResult,{color:"#9422bd"}]}
-                                            >Đáp án của bạn: {item[item.useAnswer as keyof Vocabulary]}</Text>
+                                            >Đáp án của bạn: {item.userAnswer}</Text>
                                     </View>
                                 </View>
                                 <View style={styleGlobal.lineResult}/>

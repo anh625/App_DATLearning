@@ -34,8 +34,8 @@ const TestLayout: React.FC<StatusProps> = ({funVoid }) => {
     return(
         <View style={styleGlobal.mainLayout}>
             {status == 1 && <HomeTest funvoid={toTest}/>}
-            {status == 2 && <Exams goVoid={toHome} backVoid={toHome}/>}
-            {/* {status == 3 && <Result goVoid={toHome} backVoid={toTest} ans={data} ques={ques}/>} */}
+            {status == 2 && <Exams goVoid={toResult} backVoid={toHome}/>}
+            {status == 3 && <Result goVoid={toHome} backVoid={toTest}/>}
         </View> 
     )
 }

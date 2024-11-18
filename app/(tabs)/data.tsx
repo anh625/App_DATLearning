@@ -208,7 +208,6 @@ export const getTests = ():Questions[] =>{
 
 //ip dong
 import Constants from 'expo-constants';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export const getServerIpAddress = () => {
   let ip;
@@ -233,10 +232,40 @@ export const getEQues = () =>{
     return eQues
 }
 
+//ham xoá token khi dădng xuất
 let out: () => void;
 export const setOut = (fun: ()=>void) =>{
     out=fun;
 }
 export const getOut = () =>{
     return out();
+}
+
+//api result
+export interface TestDetail {
+    wid: number;              // ID của câu hỏi
+    question: string;         // Nội dung câu hỏi
+    userAnswer: string;       // Câu trả lời của người dùng
+    systemAnswer: string;     // Đáp án hệ thống
+    correct: boolean;         // Kết quả đúng/sai
+}
+
+export interface TestData {
+    numQues: number;          // Số lượng câu hỏi
+    testDetail: TestDetail[]; // Chi tiết bài kiểm tra
+    numCorrectques: number;   // Số lượng câu đúng
+}
+
+export interface ApiResult {
+    code: number;             // Mã trạng thái
+    message: string;          // Thông báo
+    data: TestData;           // Dữ liệu trả về
+}
+
+let resultTest: ApiResult | null;
+export const setResultTest = (data: ApiResult | null) =>{
+    resultTest=data;
+}
+export const getResultTest = () =>{
+    return resultTest;
 }

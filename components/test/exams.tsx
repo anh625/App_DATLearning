@@ -3,22 +3,28 @@ import HeaderApp from "../other/header"
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal"
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useState } from "react";
-import { answer, getTests, Questions } from "@/app/(tabs)/data";
+import { answer, getTests, Questions, setResultTest } from "@/app/(tabs)/data";
 import { index } from "realm";
 import { Audio } from "expo-av";
 import moment from "moment";
-
+import apiClient from "../../app/(tabs)/bearerToken";
 interface StatusProps {
     goVoid: () => void,
     backVoid: () => void,
 
 }
 
+interface checkTest {
+    wid: number,
+    question: string,
+    userAnswer: string,
+}
 
 const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
     const [exam,setExam] = useState<Questions[]>([]);
     const getCurrentTime = moment().format( 'MM/DD/YYYY HH:mm:ss' );
     const [start,setStart] = useState<string>("");
+    const [ctest,setCTest] = useState<checkTest[]>([]);
     const timeExam = 600;
     useEffect(()=>{
         handleData();
@@ -36,6 +42,10 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
         try{
             const getData = getTests();
             setExam(getData);
+            getData.forEach(exam=>{
+                ctest.push({wid: exam.wid, question: exam.question, userAnswer: ""});
+            })
+            // console.log("ctestBefor:"+JSON.stringify(ctest));
         }catch(error){
             console.error(error)
         }
@@ -47,21 +57,22 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
         if(iExam+1 < exam.length) setiExam(iExam+1)
         else{
             //lay du lieu
-            goVoid()};
+            handleResult()};
     }
     const backQues = () => {
         iExam > 0 && setiExam(iExam-1);
     }
 
     //lay dap an
-    const [listAnswer, setListAnswer] = useState<string[]>(new Array(exam.length).fill(""));
-    const updateAnswer = (ans: string) =>{
-        setListAnswer(preAnswer => {
-            const updateItems = [...preAnswer]
-            updateItems[iExam] = ans;
-            return updateItems;
+    const updateCTest = (ans: string) => {
+        const updateAns = ctest.map((t,i)=>{
+            if(i == iExam){
+                return { ...t, userAnswer: ans };
+            }
+            return t;
         })
-    }
+        setCTest(updateAns);
+    };
 
     //dong ho dem nguoc
     const [seconds, setSeconds] = useState(timeExam);
@@ -70,7 +81,7 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
         const currentTime = moment().format( 'MM/DD/YYYY HH:mm:ss' );
         const time = Math.floor(diffTime(start,currentTime)/1000);
         if(time){
-            timeExam-time<=0 && goVoid();
+            timeExam-time<=0 && handleResult();
             setSeconds(timeExam-time);
         }
         //bo dem
@@ -125,6 +136,17 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
             }
         }
     };
+
+    //gui du lieu
+    const handleResult = async () =>{
+        // console.log("ctest after:"+JSON.stringify(ctest));
+        try{
+            const apiInstance = await apiClient(); 
+            const result = await apiInstance.post("/words/checkTest",ctest);
+            setResultTest(result.data);
+        }catch(error){console.error(error)}
+        goVoid();
+    }
     return(
         <View style={styleGlobal.mainLayout} >
             <HeaderApp isHome={false} title="" funVoid={backVoid}/>
@@ -154,10 +176,10 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
                     {exam[iExam].answers.map((answer,index)=>(<TouchableOpacity 
                     style={[
                         styleGlobal.viewAnswerQues,
-                        { backgroundColor: answer === listAnswer[iExam] ? "#D3F9D8" : "#FFFFFF" } // Đổi màu nền
+                        { backgroundColor: answer === ctest[iExam].userAnswer ? "#D3F9D8" : "#FFFFFF" } // Đổi màu nền
                     ]} 
                     key={index}
-                    onPress={() => updateAnswer(answer)}>
+                    onPress={() => updateCTest(answer)}>
                         <Text style={styleGlobal.textAnsQues}>{answer}</Text>
                     </TouchableOpacity>))}
                     {/* nut quay lai cau truoc */}

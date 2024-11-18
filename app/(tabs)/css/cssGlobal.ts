@@ -552,6 +552,7 @@ export const styleGlobal = StyleSheet.create({
     viewAnsResult: {
         width:331,
         marginTop: 63,
+        flex:1,
     },
     eachAnsResult:{
         flexDirection:"row",
@@ -564,15 +565,18 @@ export const styleGlobal = StyleSheet.create({
         fontSize:14,
         lineHeight:16.94,
     },
+    textQuesResult:{
+        flex:1,
+    },
     titleAnsResult:{
         fontWeight:"500",
         fontSize:16,
         lineHeight:19.36,
     },
     lineResult: {
-        width:328,
+        width:"100%",
         height:2,
-        backgroundColor:"#D9D9D9",
+        backgroundColor:"#000000c7",
         alignContent:"center",
     },
     //signUp
