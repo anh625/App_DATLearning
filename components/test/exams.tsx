@@ -3,7 +3,7 @@ import HeaderApp from "../other/header"
 import { styleGlobal } from "@/app/(tabs)/css/cssGlobal"
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useState } from "react";
-import { answer, getTests, Questions, setResultTest } from "@/app/(tabs)/data";
+import { answer, getTests, playSound, Questions, setResultTest } from "@/app/(tabs)/data";
 import { index } from "realm";
 import { Audio } from "expo-av";
 import moment from "moment";
@@ -111,31 +111,6 @@ const Exams: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
     if(exam.length==0){
         return(<View></View>)
     }
-
-    //ham phat ra tieng audio
-    const playSound = async (link:string) => {
-        if(link){
-            const text = link.split("https");
-            // Phần văn bản trước URL
-            // Phần URL
-            const url = "https" + text[1].trim();
-            try {
-            const { sound } = await Audio.Sound.createAsync(
-                { uri: url }
-            );
-            await sound.playAsync();
-            
-            // Giải phóng tài nguyên sau khi âm thanh phát xong
-            sound.setOnPlaybackStatusUpdate((status) => {
-                if (status.isLoaded && status.didJustFinish) {
-                    sound.unloadAsync(); // Giải phóng tài nguyên sau khi phát xong
-                }
-            });          
-            } catch (error) {
-            console.error('Lỗi khi phát âm thanh:', error);
-            }
-        }
-    };
 
     //gui du lieu
     const handleResult = async () =>{

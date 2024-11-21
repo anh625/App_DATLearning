@@ -5,7 +5,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import React, { useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { NavigationProp } from "@react-navigation/native";
-import { ApiQuestions, getTopics, setQuestions, setTidApi, Topics } from "@/app/(tabs)/data";
+import { ApiQuestions, getLname, getTopics, setQuestions, setTidApi, setTname, Topics } from "@/app/(tabs)/data";
 import apiClient from "@/app/(tabs)/bearerToken";
 
 interface StatusProps {
@@ -18,6 +18,7 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
     const [topics,setTopics] = useState<Topics[]>([])
     const [delay,setDelay] = useState(true);
     const [tid,setTid] = useState<number>(-1);
+    const [l,setL] = useState<string>("");
     useEffect(() => {
         const fetchData = async () => {
             const data = await getTopics() as { code: number; message: string; data: Topics[] } | null;
@@ -26,7 +27,7 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
                 setDelay(false);
             }
         };
-
+        setL(getLname());
         fetchData();
     }, []);
 
@@ -74,7 +75,7 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
     return(
         <TouchableWithoutFeedback  onPress={() => Keyboard.dismiss()}>
             <View style={styleGlobal.mainLayout}>
-            <HeaderApp isHome={false} title="Beginner[A1]" funVoid={backVoid}/>
+            <HeaderApp isHome={false} title={l} funVoid={backVoid}/>
             <View style={styleGlobal.viewInsert}>
                 <TouchableOpacity onPress={handleSearch}>
                     <FontAwesome style={styleGlobal.searchTopic} name="search" size={24} color="black" />
@@ -93,7 +94,7 @@ const ListTopics: React.FC<StatusProps>  = ({goVoid, backVoid}) =>{
                     keyExtractor={(item) => item.tid + ""}
                     renderItem={({item}) => {
                         return(
-                            <TouchableOpacity style={styleGlobal.iTopic} onPress={()=>setTid(item.tid)}>
+                            <TouchableOpacity style={styleGlobal.iTopic} onPress={()=>{setTname(item.tname); setTid(item.tid)}}>
                                 <Text style={styleGlobal.titleTopic}>Chủ đề: {item.tname}</Text>
                                 <View style={styleGlobal.sumPro}>
                                     <View style={[styleGlobal.progress, {width: `${item.progress}%`}]} />

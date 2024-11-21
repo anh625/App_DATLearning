@@ -3,7 +3,7 @@ import { BackHandler, Button, FlatList, Image, ImageSourcePropType, ScrollView, 
 import { styleGlobal } from "../../app/(tabs)/css/cssGlobal"
 import React, { useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
-import { ApiTopics, getInfoGoogle, getLevels, getTokenAuthor, setTopics, Topics } from "@/app/(tabs)/data"
+import { ApiTopics, getInfoGoogle, getLevels, getTokenAuthor, setLname, setTopics, Topics } from "@/app/(tabs)/data"
 import apiClient, { setAuthToken } from "@/app/(tabs)/bearerToken"
 interface StatusProps {
     funvoid: () => void;
@@ -77,7 +77,7 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
                 showsVerticalScrollIndicator={false} // Ẩn thanh cuộn dọc
                 renderItem={({item}) => {
                     return(
-                        <TouchableOpacity onPress={()=>setLid(item.lid)} style={styleGlobal.IViewLevels}>
+                        <TouchableOpacity onPress={()=>{setLname(item.lname);setLid(item.lid)}} style={styleGlobal.IViewLevels}>
                             <Image style={styleGlobal.imageLevel} source={{uri: item.limage}} />
                             <View style={styleGlobal.viewDetail}>
                                 <Text style={styleGlobal.titleLevel}>{item.lname}</Text>
