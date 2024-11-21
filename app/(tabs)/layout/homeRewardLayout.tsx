@@ -52,6 +52,7 @@ const HomeRewardScreen = () => {
                             placeholder="Nhập tên sản phẩm muốn tìm"
                             value={searchText}
                             onChangeText={handleSearch}
+                            onFocus={() => setSearchText('')}
                         />
                     </View>
                     {!hasResults ? ( // Kiểm tra nếu không có phần thưởng nào
@@ -70,8 +71,6 @@ const HomeRewardScreen = () => {
                                             <Text style={styles.priceReward}>{item.price} dats</Text>
                                         </View>
                                     </TouchableOpacity>
-
-
 
                                 );
                             }}

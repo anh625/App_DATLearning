@@ -17,6 +17,8 @@ import Vocabulary from '@/app/(tabs)/layout/vocabularyLayout';
 import TestLayout from '@/app/(tabs)/layout/testLayout';
 import { useNavigation } from 'expo-router';
 import { setLogout } from '@/app/(tabs)/data';
+import DictionaryScreen from '@/app/(tabs)/layout/dictionary';
+import GameLayout from './navigationGame';
 
 const Tab = createBottomTabNavigator();
 const MyTabs = () => {
@@ -67,8 +69,8 @@ const MyTabs = () => {
             ),
           }}>{() => <TestLayout funVoid={handleDis}/>}</Tab.Screen>
         <Tab.Screen
-          name="rewards"
-          component={RewardLayout}
+          name="dictionary"
+          component={DictionaryScreen}
           options={{
             tabBarLabel: ({ focused }) => (
               focused ? <Text style={styleGlobal.textBottomTap}>Đổi thưởng</Text> : null
@@ -80,7 +82,7 @@ const MyTabs = () => {
         />
         <Tab.Screen
           name="games"
-          component={SignUpLayout}
+          component={GameLayout}
           options={{
             tabBarLabel: ({ focused }) => (
               focused ? <Text style={styleGlobal.textBottomTap}>Giải trí</Text> : null
