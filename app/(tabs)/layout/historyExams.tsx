@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Svg, { Circle } from "react-native-svg";
+import { hisExamsStyles } from "../css/hisExamsStyles";
 
 interface IHistoryExam {
     id: number;
@@ -11,56 +12,56 @@ interface IHistoryExam {
     answers: number;
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-    },
-    header: {
-        backgroundColor: "white",
-        paddingBottom: 25,
-    },
-    text_header: {
-        fontSize: 25,
-        color: "#4C4A54",
-        fontWeight: "700",
-        textAlign: "center",
-        paddingTop: 20,
-    },
-    itemHistory: {
-        flexDirection: "row",
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        marginBottom: 15,
-        marginHorizontal: 40,
-        borderRadius: 10,
-        backgroundColor: "#A3EFA5",
-        elevation: 5,
-    },
-    circleOverlay: {
-        width: 40,
-        height: 40,
-        borderRadius: 30,
-        backgroundColor: "#FFFFFF",
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
+// const hisExamsStyles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         backgroundColor: "#FFFFFF",
+//     },
+//     header: {
+//         backgroundColor: "white",
+//         paddingBottom: 25,
+//     },
+//     text_header: {
+//         fontSize: 25,
+//         color: "#4C4A54",
+//         fontWeight: "700",
+//         textAlign: "center",
+//         paddingTop: 20,
+//     },
+//     itemHistory: {
+//         flexDirection: "row",
+//         paddingHorizontal: 20,
+//         paddingVertical: 15,
+//         marginBottom: 15,
+//         marginHorizontal: 40,
+//         borderRadius: 10,
+//         backgroundColor: "#A3EFA5",
+//         elevation: 5,
+//     },
+//     circleOverlay: {
+//         width: 40,
+//         height: 40,
+//         borderRadius: 30,
+//         backgroundColor: "#FFFFFF",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         shadowColor: "#000",
 
-        elevation: 5,
-    },
-    percentageText: {
-        position: "absolute",
-        color: "black",
-        fontSize: 14,
-        fontWeight: "500",
-    },
-    infoHistory: {
-        paddingStart: 20,
-        color: "#4C4A59",
-        fontSize: 16,
-        fontWeight: "500",
-    },
-});
+//         elevation: 5,
+//     },
+//     percentageText: {
+//         position: "absolute",
+//         color: "black",
+//         fontSize: 14,
+//         fontWeight: "500",
+//     },
+//     infoHistory: {
+//         paddingStart: 20,
+//         color: "#4C4A59",
+//         fontSize: 16,
+//         fontWeight: "500",
+//     },
+// });
 
 const HistoryExamLayout = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -82,7 +83,7 @@ const HistoryExamLayout = () => {
         return circumference - (percentage / 100) * circumference;
     };
 
-    const [historyexems, setHistoryexems] = useState<IHistoryExam[]>([
+    const [historyexams, setHistoryexams] = useState<IHistoryExam[]>([
         { id: 1, date: "20/01/2024", answers: 20 },
         { id: 2, date: "20/01/2024", answers: 16 },
         { id: 3, date: "20/01/2024", answers: 15 },
@@ -96,8 +97,8 @@ const HistoryExamLayout = () => {
     ]);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
+        <View style={hisExamsStyles.container}>
+            <View style={hisExamsStyles.header}>
                 <Ionicons
                     name="arrow-back-outline"
                     size={40}
@@ -105,19 +106,19 @@ const HistoryExamLayout = () => {
                     style={{ zIndex: 10, position: "absolute", paddingLeft: 10 }}
                     onPress={() => navigation.navigate("userInfo")}
                 />
-                <Text style={styles.text_header}>Lịch sử kiểm tra</Text>
+                <Text style={hisExamsStyles.text_header}>Lịch sử kiểm tra</Text>
             </View>
-            <View style={styles.container}>
+            <View style={hisExamsStyles.container}>
                 <FlatList
-                    data={historyexems}
+                    data={historyexams}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => {
                         const percentage = calculatePercentage(item.answers);
                         const strokeDashoffset = calculateStrokeDashoffset(percentage);
 
                         return (
-                            <View style={styles.itemHistory}>
-                                <View style={styles.circleOverlay}>
+                            <View style={hisExamsStyles.itemHistory}>
+                                <View style={hisExamsStyles.circleOverlay}>
                                     <Svg width={50} height={50}>
                                         <Circle
                                             cx="25"
@@ -140,11 +141,11 @@ const HistoryExamLayout = () => {
                                             transform={`rotate(-90 25 25)`}
                                         />
                                     </Svg>
-                                    <Text style={styles.percentageText}>{percentage}%</Text>
+                                    <Text style={hisExamsStyles.percentageText}>{percentage}%</Text>
                                 </View>
                                 <View>
-                                    <Text style={styles.infoHistory}>Ngày : {item.date}</Text>
-                                    <Text style={styles.infoHistory}>
+                                    <Text style={hisExamsStyles.infoHistory}>Ngày : {item.date}</Text>
+                                    <Text style={hisExamsStyles.infoHistory}>
                                         Số câu trả lời đúng : {item.answers}/{totalQuestions}
                                     </Text>
                                 </View>

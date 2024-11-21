@@ -8,6 +8,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
+import { guideStyles } from "../../css/guideStyles";
 
 interface GuideModalProps {
   visible: boolean;
@@ -49,18 +50,18 @@ const GuideScreen: React.FC<GuideModalProps> = ({ visible, onClose }) => {
 
   return (
     <Modal transparent={true} visible={visible} onRequestClose={onClose}>
-      <View style={styles.modalContainer}>
-        <Animated.View style={[styles.modalContent, { opacity: fadeAnim }]}>
-          <Text style={styles.modalTitle}>LUẬT CHƠI</Text>
-          <Text style={styles.modalText}>
+      <View style={guideStyles.modalContainer}>
+        <Animated.View style={[guideStyles.modalContent, { opacity: fadeAnim }]}>
+          <Text style={guideStyles.modalTitle}>LUẬT CHƠI</Text>
+          <Text style={guideStyles.modalText}>
             Khi nhấn bắt đầu, hai người chơi sẽ được ghép đôi với nhau. Khi ghép
             đôi hoàn tất, màn hình sẽ hiện ra "1 từ tiếng anh và 8 từ tiếng việt".
             Nhiệm vụ của bạn là chọn chính xác ô có nghĩa của từ tiếng anh. Có
             tổng cộng 15 câu hỏi, nếu chọn đúng, bạn sẽ được 1 điểm, nếu sai,
             đối thủ của bạn sẽ được điểm. Hãy chú ý tốc độ và độ chính xác.
           </Text>
-          <TouchableOpacity style={styles.confirmButton} onPress={onClose}>
-            <Text style={styles.confirmButtonText}>Xác nhận</Text>
+          <TouchableOpacity style={guideStyles.confirmButton} onPress={onClose}>
+            <Text style={guideStyles.confirmButtonText}>Xác nhận</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -68,50 +69,50 @@ const GuideScreen: React.FC<GuideModalProps> = ({ visible, onClose }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Màu nền bán trong suốt
-  },
-  modalContent: {
-    width: "80%",
-    height: "60%",
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 30,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 15,
-    color: "#333",
-  },
-  modalText: {
-    fontSize: 20, // Tăng kích thước font cho văn bản
-    color: "#333",
-    fontWeight: "500",
-    textAlign: "justify",
-    marginBottom: 30, // Tăng khoảng cách giữa văn bản và nút
-  },
-  confirmButton: {
-    backgroundColor: "#4A90E2",
-    padding: 15,
-    borderRadius: 10, // Tăng độ bo góc nút
-    width: "80%", // Tăng chiều rộng nút
-    alignItems: "center",
-  },
-  confirmButtonText: {
-    color: "#fff",
-    fontSize: 18, // Tăng kích thước chữ nút
-  },
-});
+// const styles = StyleSheet.create({
+//   modalContainer: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "rgba(0, 0, 0, 0.5)", // Màu nền bán trong suốt
+//   },
+//   modalContent: {
+//     width: "80%",
+//     height: "60%",
+//     backgroundColor: "#fff",
+//     borderRadius: 15,
+//     padding: 30,
+//     alignItems: "center",
+//     shadowColor: "#000",
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.3,
+//     shadowRadius: 4,
+//     elevation: 5,
+//   },
+//   modalTitle: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     marginBottom: 15,
+//     color: "#333",
+//   },
+//   modalText: {
+//     fontSize: 20, // Tăng kích thước font cho văn bản
+//     color: "#333",
+//     fontWeight: "500",
+//     textAlign: "justify",
+//     marginBottom: 30, // Tăng khoảng cách giữa văn bản và nút
+//   },
+//   confirmButton: {
+//     backgroundColor: "#4A90E2",
+//     padding: 15,
+//     borderRadius: 10, // Tăng độ bo góc nút
+//     width: "80%", // Tăng chiều rộng nút
+//     alignItems: "center",
+//   },
+//   confirmButtonText: {
+//     color: "#fff",
+//     fontSize: 18, // Tăng kích thước chữ nút
+//   },
+// });
 
 export default GuideScreen;
