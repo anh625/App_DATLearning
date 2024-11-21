@@ -1,5 +1,4 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { OPENSANS_REGULAR, SPACEMONO_REGULAR } from "../css/const";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import headerInfo from "../../../assets/images/png/headerInfo.png";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
