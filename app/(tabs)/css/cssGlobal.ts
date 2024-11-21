@@ -254,9 +254,8 @@ export const styleGlobal = StyleSheet.create({
         borderRadius:5,
         paddingLeft:14,
         paddingRight:9,
-        paddingTop:12,
-        paddingBottom: 17,
-        justifyContent: "space-between",
+        paddingBottom: 5,
+        justifyContent: "space-evenly",
     },
     titleTopic:{
         fontWeight:"500",

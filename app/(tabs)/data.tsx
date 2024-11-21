@@ -269,3 +269,5 @@ export const setResultTest = (data: ApiResult | null) =>{
 export const getResultTest = () =>{
     return resultTest;
 }
+
+
