@@ -7,7 +7,11 @@ type RootStackParamList = {
     historyRewards: undefined;
     homerewards: undefined;
     inforewards: { name: string; image: string; price: number | undefined};
+    homegames: undefined;
+    guides: undefined;
+    ranks: undefined;
     myTabs: undefined;
+    distionary: undefined;
 };
 declare global {
     namespace ReactNavigation {
