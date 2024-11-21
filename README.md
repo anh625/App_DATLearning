@@ -27,6 +27,9 @@ notejs, jdk 17, android studio, setup JAVA_HOME ANDROID_HOME, dooker.
 
    ```bash
    npx expo install expo-dev-client
+   npm install react-native-background-timer
+   npm install moment
+   expo install expo-av
    ```
 
 4. Start the app

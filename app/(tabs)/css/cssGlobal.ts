@@ -277,7 +277,6 @@ export const styleGlobal = StyleSheet.create({
         backgroundColor: "#FFFFFF",
     },
     viewHeaderQues: {
-        height:152,
         width: "100%",
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
