@@ -73,7 +73,7 @@ const MyTabs = () => {
           component={DictionaryScreen}
           options={{
             tabBarLabel: ({ focused }) => (
-              focused ? <Text style={styleGlobal.textBottomTap}>Đổi thưởng</Text> : null
+              focused ? <Text style={styleGlobal.textBottomTap}>Tra từ điển</Text> : null
             ),
             tabBarIcon: ({ color, size }) => (
               <FontAwesome6 name="gift" size={size} color={color} />

@@ -13,7 +13,7 @@ export const userInfoStyles = StyleSheet.create({
     },
     circleOverlay: {
         position: "absolute",
-        top: "50%",
+        top: "45%",
         left: "50%",
         transform: [{ translateX: -45 }, { translateY: -100 }],
         width: 90,
@@ -28,15 +28,14 @@ export const userInfoStyles = StyleSheet.create({
         top: "45%",
         left: "50%",
         transform: [{ translateX: -60 }],
-        alignItems: "center",
-    },
+        alignItems: "center",    },
     userName: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: "bold",
         color: "white",
     },
     userEmail: {
-        fontSize: 16,
+        fontSize: 18,
         fontStyle: "italic",
         color: "white",
         // fontFamily: "Helvet",
