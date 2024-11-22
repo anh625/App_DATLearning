@@ -5,7 +5,7 @@ export interface Role {
 }
 
 //Api Usr
-export interface ApiResponse {
+export interface ApiUser {
     code: number;
     message: string;
     data: User;
@@ -22,6 +22,7 @@ export interface User {
     updated_at: string | null;
     created_at: string;
     no_password: boolean;
+    image: string;
 }
 
 // Lưu thông tin người dùng vào trạng thái toàn cục
@@ -268,4 +269,18 @@ export const setResultTest = (data: ApiResult | null) =>{
 }
 export const getResultTest = () =>{
     return resultTest;
+}
+
+
+export interface Historyexams {
+    thid: number;
+    uid: number;
+    numques: string;
+    numcorrectques: number;
+    tdate: string;
+}
+export interface ApiHistoryexams {
+    code: number;
+    message: string;
+    data: Historyexams[]; // Dữ liệu trả về là mảng các lịch sử kiểm tra
 }

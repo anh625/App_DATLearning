@@ -3,11 +3,12 @@ import { StyleSheet } from "react-native";
 export const hisExamsStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#F5F5F5",
     },
     header: {
         backgroundColor: "white",
         paddingBottom: 25,
+        borderBottomColor: "#E0E0E0",
     },
     text_header: {
         fontSize: 25,
@@ -44,9 +45,10 @@ export const hisExamsStyles = StyleSheet.create({
         fontWeight: "500",
     },
     infoHistory: {
-        paddingStart: 20,
+        paddingStart: 15,
         color: "#4C4A59",
         fontSize: 16,
         fontWeight: "500",
+        flexShrink: 1,
     },
 });

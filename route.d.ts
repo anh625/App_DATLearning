@@ -3,7 +3,7 @@ type RootStackParamList = {
     signUp: undefined;
     forgetPassword: undefined;
     userInfo: undefined;
-    historyExams: undefined;
+    historyExams: { historyData: Historyexams[] } | undefined;
     historyRewards: undefined;
     homerewards: undefined;
     inforewards: { name: string; image: string; price: number | undefined};
