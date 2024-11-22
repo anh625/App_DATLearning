@@ -54,6 +54,7 @@ export const styleGlobal = StyleSheet.create({
         marginTop:5,
         fontSize: 12,
         color: "red",
+        width: 251,
     },
 
     // button

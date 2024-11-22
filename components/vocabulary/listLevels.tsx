@@ -65,7 +65,9 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
             handleTopic();
         }
     }, [lids]);
-
+    if(!levels){
+        return(<></>)
+    }
     return(
         <View style={styleGlobal.mainLayout}>
             <HeaderApp isHome={true} title="Danh sách các cấp độ" funVoid={() => null}/>
@@ -83,7 +85,7 @@ const ListLevels: React.FC<StatusProps> = ({funvoid}) => {
                                 <Text style={styleGlobal.titleLevel}>{item.lname}</Text>
                                 <Text style={styleGlobal.detailLevel}>Danh sách từ vựng từ {item.lname} bao gồm {item.numTopics} bài học và {item.numWord} từ vựng được phân loại theo chủ đề, độ khó và cách sử dụng theo CERF</Text>
                                 <View style={styleGlobal.sumPro}>
-                                    <View style={[styleGlobal.progress, {width: `${item.progress}%`}]} />
+                                    <View style={[styleGlobal.progress, {width: `${item.progress*100 }%`}]} />
                                 </View>
                             </View>
                         </TouchableOpacity>

@@ -25,7 +25,7 @@ export const setAuthToken = (apiClient: any, token: any) => {
 
 export const initializeApiClient = async () => {
   const apiClient = await createApiClient();
-  const token = await getTokenAuthor();
+  const token = getTokenAuthor();
   setAuthToken(apiClient, token);
   return apiClient;
 };

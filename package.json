@@ -49,7 +49,10 @@
     "react-native-web": "~0.19.10",
     "realm": "^12.13.2",
     "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
+    "stomp": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
