@@ -271,7 +271,7 @@ export const getResultTest = () =>{
     return resultTest;
 }
 
-
+//History Exams
 export interface Historyexams {
     thid: number;
     uid: number;
@@ -282,5 +282,18 @@ export interface Historyexams {
 export interface ApiHistoryexams {
     code: number;
     message: string;
-    data: Historyexams[]; // Dữ liệu trả về là mảng các lịch sử kiểm tra
+    data: Historyexams[];
+}
+
+//Dictionary
+export interface WordDictionary{
+    word: string;
+    type: string;
+    mean: string;
+    pronun: string;
+}
+export interface ApiWordDictionary{
+    code: number;
+    message: string;
+    data: WordDictionary[];
 }

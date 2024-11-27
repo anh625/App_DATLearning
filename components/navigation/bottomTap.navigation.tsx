@@ -10,15 +10,13 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ListLevels from '@/components/vocabulary/listLevels';
 import { NavigationContainer, NavigationProp } from '@react-navigation/native';
-import UserInfoScreen from '@/app/(tabs)/layout/userInfo';
 import UserInfoLayout from './navigationUserInfo';
-import RewardLayout from './navigationReward';
 import Vocabulary from '@/app/(tabs)/layout/vocabularyLayout';
 import TestLayout from '@/app/(tabs)/layout/testLayout';
 import { useNavigation } from 'expo-router';
 import { setLogout } from '@/app/(tabs)/data';
-import DictionaryScreen from '@/app/(tabs)/layout/dictionary';
 import GameLayout from './navigationGame';
+import DictionaryLayout from './navigationDictionary';
 
 const Tab = createBottomTabNavigator();
 const MyTabs = () => {
@@ -70,7 +68,7 @@ const MyTabs = () => {
           }}>{() => <TestLayout funVoid={handleDis}/>}</Tab.Screen>
         <Tab.Screen
           name="dictionary"
-          component={DictionaryScreen}
+          component={DictionaryLayout}
           options={{
             tabBarLabel: ({ focused }) => (
               focused ? <Text style={styleGlobal.textBottomTap}>Tra từ điển</Text> : null

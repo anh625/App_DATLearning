@@ -5,6 +5,12 @@ export const userInfoStyles = StyleSheet.create({
         backgroundColor: "white",
         flex: 1
     },
+    headerContainer:{
+        // borderWidth: 1,
+        flexDirection:"row",
+        justifyContent: "center"
+        // alignContent: "center"
+    },
     headerImage: {
         height: 267,
         width: "100%",
@@ -13,9 +19,7 @@ export const userInfoStyles = StyleSheet.create({
     },
     circleOverlay: {
         position: "absolute",
-        top: "45%",
-        left: "50%",
-        transform: [{ translateX: -45 }, { translateY: -100 }],
+        marginTop: 25,
         width: 90,
         height: 90,
         borderRadius: 45,
@@ -25,10 +29,11 @@ export const userInfoStyles = StyleSheet.create({
     },
     textContainer: {
         position: "absolute",
-        top: "45%",
-        left: "50%",
-        transform: [{ translateX: -60 }],
-        alignItems: "center",    },
+        marginTop: 120,
+        width: "100%",
+        alignItems: "center",   
+    },
+        
     userName: {
         fontSize: 20,
         fontWeight: "bold",
