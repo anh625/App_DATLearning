@@ -6,6 +6,7 @@ export const styleGlobal = StyleSheet.create({
     mainLayout: {
         flex:1,
         alignItems:"center",
+        width:"100%",
     },
     //boxInput
     boxInput:{
@@ -137,20 +138,22 @@ export const styleGlobal = StyleSheet.create({
         backgroundColor: "#459DE4",
         alignItems:"center",
         flexDirection:"row",
+        justifyContent:"center"
     },
     backHeader: {
         position: "absolute",
-        left: 19, // Căn trái nếu cần thiết
-        top: "-50%",
-        transform: [{translateX:0},{ translateY: 50}], // Di chuyển lên một nửa chiều cao của biểu tượng
+        left: 19, 
     },
     textHeader:{
-        flex:1,
-        textAlign:"center",
         fontWeight:"700",
         fontSize:20,
         lineHeight:24.2,
-        color: "white"
+        color: "white",
+        
+    },
+    chatHeader: {
+        position:"absolute",
+        right:10,
     },
 
     //image Study
@@ -549,7 +552,7 @@ export const styleGlobal = StyleSheet.create({
         alignItems:"center",
     },
     viewAnsResult: {
-        width:331,
+        width:"92%",
         marginTop: 63,
         flex:1,
     },
