@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Animated, FlatList } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Animated, FlatList, BackHandler, Button } from 'react-native';
 import { GiftedChat, IMessage, Bubble, InputToolbar, MessageText } from 'react-native-gifted-chat';
 import {GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { useFocusEffect } from 'expo-router';
+import { getCloseChat } from '@/app/(tabs)/data';
 
 export interface CustomMessage extends IMessage {
   replyTo?: {
@@ -154,6 +156,22 @@ const ChatScreen: React.FC = () => {
         }).start();
       }
     };
+    const close = () =>{
+      // getCloseChat();
+      // BackHandler.exitApp();
+      console.log("da an thoat chat")
+      return true;
+    }
+    useFocusEffect(
+      React.useCallback(() => {
+          // Thêm listener cho sự kiện nhấn nút quay lại
+          BackHandler.addEventListener('hardwareBackPress', close );
+          // Dọn dẹp listener khi component không còn được hiển thị
+          return () => {
+              BackHandler.removeEventListener('hardwareBackPress', close);
+          };
+      }, []) // Mảng phụ thuộc rỗng để chỉ chạy khi component được hiển thị
+  );
 
     return (
       <PanGestureHandler
@@ -171,6 +189,7 @@ const ChatScreen: React.FC = () => {
           {/* , styles.bubbleRight */}
             <Text style={styles.label}>{currentMessage.text}</Text>
           </View>
+          
         </Animated.View>
       </PanGestureHandler>
     );

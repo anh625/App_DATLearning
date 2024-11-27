@@ -326,3 +326,11 @@ export const playSound = async (link:string) => {
         }
     }
 };
+
+let closeChat: () => void;
+export const setCloseChat = (fun: ()=>void)=>{
+    closeChat = fun;
+}
+export const getCloseChat = () =>{
+    return closeChat;
+};
