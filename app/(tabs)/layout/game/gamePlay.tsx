@@ -2,8 +2,81 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import { CompatClient, Stomp, Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import apiClient from "../../bearerToken";
+import { getServerIpAddress, getTokenAuthor } from '@/app/(tabs)/data';
 
 const GamePlayScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  // const [question, setQuestion] = useState<string>(""); // Câu hỏi hiện tại
+  // const [answers, setAnswers] = useState<string[]>([]); // Các đáp án
+  // const [correctAnswer, setCorrectAnswer] = useState<string>(""); // Đáp án đúng
+  const [score, setScore] = useState<number>(0); // Điểm của người chơi
+  const [opponentScore, setOpponentScore] = useState<number>(0); // Điểm đối thủ
+  const [stomp, setStomp] = useState<CompatClient | null>(null);
+  // const [roomId, setRoomId] = useState<String | null>(null);
+  const [connected, setConnected] = useState(false);
+
+  const fetchGames = async () => {
+    try {
+      const apiInstance = await apiClient();
+      const response = await apiInstance.get("/game/join");
+      const roomId = (response.data.roomId);
+
+      console.log(roomId);
+      const userId = "";
+  
+
+      
+          const socket = new Client({
+            brokerURL: `ws://${getServerIpAddress()}:8080/chat`,
+          });
+      
+          socket.onConnect = () => {
+            setConnected(true);
+            socket.subscribe('/topic/game', (message) => {
+              console.log(message.body);
+            });
+          };
+      
+          socket.onStompError = (frame) => {
+            console.error('Broker reported error: ' + frame);
+            console.error('Additional details: ' + frame.headers);
+          };
+      
+          socket.activate();
+      
+      
+     
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  }
+  useEffect(() => {
+    fetchGames();
+    // let stompClient: CompatClient | null = null;
+    //   let socket: any = null;
+    //   const SOCKET_URL = `http://${getServerIpAddress()}:8080/chat`;
+    //   if(socket == null && stomp == null && stompClient == null){
+    //     socket = new SockJS(SOCKET_URL);
+    //     stompClient = Stomp.over(socket);
+    //     if (!socket.OPEN) {
+    //       stompClient.connect({"token" : getTokenAuthor()}, (frame: any) => {
+    //         setTimeout(() => {
+    //           setStomp(stompClient);
+    //           stompClient!.subscribe(`/topic/game/${roomId}`, (messageOutput: any) => {
+    //             console.log(JSON.parse(messageOutput))
+    //           })
+    //           // stompClient!.subscribe(`/topic/game/${roomId}/${userId}`, (messageOutput: any) => {
+    //           //   console.log(JSON.parse(messageOutput))
+    //           // })
+    //         }, 1500)
+    //       })
+    //     }
+    //   }
+  }, []);
+
   // Trạng thái câu hỏi và đáp án
   const [question, setQuestion] = useState<string>("DCMMMM");
   const [answers, setAnswers] = useState<string[]>([
@@ -17,7 +90,7 @@ const GamePlayScreen = () => {
     "Lâm",
   ]);
   const [correctAnswer, setCorrectAnswer] = useState<string>("Thái");
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  
   // Hàm xử lý khi chọn đáp án
   const handleAnswerPress = (selectedAnswer: string) => {
     if (selectedAnswer === correctAnswer) {
@@ -167,4 +240,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GamePlayScreen;
+export default GamePlayScreen
