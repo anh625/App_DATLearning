@@ -3,7 +3,7 @@
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 # Prepare
-notejs, jdk 17, android studio, setup JAVA_HOME ANDROID_HOME, dooker.
+notejs, jdk 17, android studio, setup JAVA_HOME ANDROID_HOME, docker.
 
 ## Get started
 0. Thay đổi chính sách Execution Policy 

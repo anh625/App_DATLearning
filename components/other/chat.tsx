@@ -5,7 +5,7 @@ import {GestureHandlerRootView, PanGestureHandler, State } from 'react-native-ge
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useFocusEffect } from 'expo-router';
-import { getCloseChat } from '@/app/(tabs)/data';
+import { getCloseChat, getServerIpAddress, getTokenAuthor } from '@/app/(tabs)/data';
 
 export interface CustomMessage extends IMessage {
   replyTo?: {
@@ -18,10 +18,10 @@ export interface CustomMessage extends IMessage {
   } | null;
 }
 
-const SOCKET_URL = 'http://192.168.1.156:8080/chat';
+const SOCKET_URL = `http://${getServerIpAddress()}:8080/chat`;
 const USER_ID = 'e692cd89-e09e-4651-afb8-8956d349ff6c'; // uid
 const TOKEN = 'eyJhbGciOiJIUzUxMiJ9.eyJ1aWQiOiJlNjkyY2Q4OS1lMDllLTQ2NTEtYWZiOC04OTU2ZDM0OWZmNmMiLCJzdWIiOiJ1c2VyQGdtYWlsLmNvbSIsIm5vX3Bhc3N3b3JkIjpmYWxzZSwic2NvcGUiOiJST0xFX1VTRVIiLCJpc3MiOiJ0dWFuYW5obmUuY29tIiwibmFtZSI6IlVTRVIiLCJleHAiOjE3MzI0NjE0ODUsImlhdCI6MTczMjM3NTA4NSwianRpIjoiOGVhMGNmYTUtNTRhMi00MDlkLTlkMzQtNzNiMjc4MjQyMGU1In0.xbgijdh0XxroVpgUq7WqndU-U2EnRkhiKsZ6W-ADUqfs0P_QYzUz3z_zylo4MekFFClyh06eBnyllpnAS1cgQQ'
-const MESSAGE_API = 'http://192.168.1.156:8080/words/test'
+const MESSAGE_API = `http://${getServerIpAddress()}:8080/words/test`
 
 
 const ChatScreen: React.FC = () => {

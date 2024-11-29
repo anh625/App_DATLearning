@@ -26,12 +26,12 @@ const HeaderApp: React.FC<StatusProps>  = ({isHome, title, funVoid}) => {
             <TouchableOpacity style={styleGlobal.chatHeader} onPress={()=>setIVisible(true)}>
                 <Ionicons name="chatbubble-ellipses-outline" size={40} color="white" />
             </TouchableOpacity>
-            <Modal
+            {/* <Modal
                 visible={iVisible}
                 animationType="slide"
                 transparent={true}>
                     <ChatScreen/>
-            </Modal>
+            </Modal> */}
         </View>
     )
 }
