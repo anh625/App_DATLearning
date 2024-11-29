@@ -1,17 +1,50 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { rankStyles } from "../../css/rankStyles";
+import apiClient from "../../bearerToken";
+
+export interface User {
+  name: string,
+  image: string,
+  point: string
+}
+
+export interface UserWithId extends User {
+  id: number
+}
 
 const RankSceen = () => {
+  console.warn = () => {}
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [learderboard, setLeaderboard] = useState<UserWithId[]>([]);
+  const [yourInfo, setYourInfo] = useState<User>();
+  const fetchUser = async () => {
+    const apiInstance = await apiClient();
+    const response = await apiInstance.get("/game/leaderboard");
+    const users: User[] = response.data;
+    console.log({"users": users})
+    setYourInfo(users.pop());
+    setLeaderboard(users.map((user, index) => ({
+      id: index + 1,
+      ...user
+    })));
+  }
+  useEffect(() => {
+    fetchUser();
+  }, [])
   useEffect(() => {
     navigation.getParent()?.setOptions({ tabBarStyle: { display: "none" } });
     return () =>
       navigation.getParent()?.setOptions({ tabBarStyle: { display: "flex" } });
   }, [navigation]);
-
+  const getSubArray = (users: UserWithId[]) => {
+    const order = [1, 0, 2];
+    const limit = Math.min(users.length, order.length);
+    const res = Array.from({ length: limit }, (_, i) => users[order[i]]);
+    return res;
+  } 
   return (
     <View style={rankStyles.container}>
       <View style={rankStyles.header}>
@@ -26,27 +59,27 @@ const RankSceen = () => {
       </View>
       <View style={rankStyles.topContainer}>
         <View style={rankStyles.mainCardContainer}>
-          {[2, 1, 3].map((item, index) => {
+          {getSubArray(learderboard).map((item, index) => {
             return (
               <View
                 key={index}
-                style={[rankStyles.mainCard, item !== 1 && { marginTop: 20 }]}
+                style={[rankStyles.mainCard, item.id !== 1 && { marginTop: 20 }]}
               >
                 <Image
-                  source={require("../../../../assets/images/png/rewardBear.png")}
+                  source={item?.image ? {uri: item?.image} : require('../../../../assets/images/png/rewardBear.png')}
                   style={rankStyles.mainCardImage}
                   resizeMode="cover"
                 />
-                <Text style={rankStyles.mainCardTitle}>Vishu</Text>
+                <Text style={rankStyles.mainCardTitle}>{item.name}</Text>
                 {/* <View style={style.mainCardRankContainer}> */}
                   {/* <Text style={style.mainCardRankContainerText}>{item}</Text> */}
                   {/* Thay đổi thành ảnh tương ứng */}
-                  {item === 1 ? (
+                  {item.id === 1 ? (
                     <Image
                       source={require("../../../../assets/images/png/game/vang.png")} // Thay bằng ảnh huy chương vàng
                       style={rankStyles.mainCardRankContainer}
                     />
-                  ) : item === 2 ? (
+                  ) : item.id === 2 ? (
                     <Image
                       source={require("../../../../assets/images/png/game/bac.png")} // Thay bằng ảnh huy chương bạc
                       style={rankStyles.mainCardRankContainer}
@@ -65,21 +98,21 @@ const RankSceen = () => {
       </View>
 
       <FlatList
-        data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 4, 5, 6, 7, 8, 9]}
+        data={learderboard}
         renderItem={({ item, index }) => {
           return (
             <View style={rankStyles.card}>
               <View style={rankStyles.cardDataContainer}>
                 <Text style={rankStyles.cardIndex}>{index + 1}</Text>
                 <Image
-                  source={require("../../../../assets/images/png/rewardBear.png")}
+                  source={item?.image ? {uri: item?.image} : require('../../../../assets/images/png/rewardBear.png')}
                   style={rankStyles.cardImage}
                   resizeMode="cover"
                 />
-                <Text style={rankStyles.cardTitle}>Vishu Chaturvedi</Text>
+                <Text style={rankStyles.cardTitle}>{item.name}</Text>
               </View>
               <View style={rankStyles.cardRankContainer}>
-                <Text style={rankStyles.cardRankTitle}>3456,789</Text>
+                <Text style={rankStyles.cardRankTitle}>{item.point}</Text>
               </View>
             </View>
           );
@@ -88,14 +121,14 @@ const RankSceen = () => {
       <View style={rankStyles.cardbyme}>
           <View style={rankStyles.cardDataContainer}>
             <Image
-              source={require("../../../../assets/images/png/rewardBear.png")}
+              source={yourInfo?.image ? {uri: yourInfo?.image} : require('../../../../assets/images/png/rewardBear.png')}
               style={rankStyles.cardImage}
               resizeMode="cover"
             />
-            <Text style={rankStyles.cardTitleByMe}>Vishu Chaturvedi (YOU)</Text>
+            <Text style={rankStyles.cardTitleByMe}>{yourInfo?.name} (YOU)</Text>
           </View>
           <View style={rankStyles.cardRankContainer}>
-            <Text style={rankStyles.cardRankTitle}>3456,789</Text>
+            <Text style={rankStyles.cardRankTitle}>{yourInfo?.point}</Text>
           </View>
         </View>
       </View>
