@@ -1,7 +1,7 @@
-import GameScreen from '@/app/(tabs)/layout/game/gameLayout';
-import GuideScreen from '@/app/(tabs)/layout/game/guide';
+import GameScreen from '@/app/(tabs)/layout/game/homeGame';
 import RankSceen from '@/app/(tabs)/layout/game/rank';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import GamePlayScreen from '@/app/(tabs)/layout/game/gamePlay';
 
 const GameLayout = () => {
     const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -12,10 +12,10 @@ const GameLayout = () => {
                 name='homegames'
                 component={GameScreen}
             />
-            {/* <Stack.Screen
-                name='guides'
-                component={GuideScreen}
-            /> */}
+            <Stack.Screen
+                name='gameplay'
+                component={GamePlayScreen}
+            />
             <Stack.Screen
                 name='ranks'
                 component={RankSceen}

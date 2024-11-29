@@ -20,7 +20,7 @@ const UserInfoScreen = () => {
     try {
         const apiInstance = await initializeApiClient();
         const response = await apiInstance.get<ApiHistoryexams>("/words/getTestHistory");
-        console.log(response.data)
+        console.log(response.data.data)
         if (response.data.data) {
             navigation.navigate("historyExams", { historyData: response.data.data })
         } else {
@@ -46,11 +46,9 @@ const fetchInfo = async () => {
       console.log("Đã xảy ra lỗi khi tải dữ liệu.");
   }
 };
-useFocusEffect(
-  React.useCallback(() => {
-    fetchInfo()
-  }, []) // Mảng phụ thuộc rỗng để chỉ chạy khi component được hiển thị
-);
+useEffect(() => {
+  fetchInfo()
+},[])
 
   if(!userInfo){
     return(<></>)
@@ -58,7 +56,7 @@ useFocusEffect(
   return (
     <View style={userInfoStyles.container}>
       {/* Header */}
-      <View>
+      <View style={userInfoStyles.headerContainer}>
         <Image style={userInfoStyles.headerImage} source={headerInfo} />
         <View style={userInfoStyles.circleOverlay}>
           <Image

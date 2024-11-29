@@ -18,7 +18,7 @@ const HistoryExamLayout = () => {
   const route = useRoute<HistoryExamsRouteProp>(); // Truy cập tham số từ route
   
   const historyData = route.params?.historyData ?? [];
-  const totalQuestions = 20;
+  // const totalQuestions = 20;
   const radius = 20; // bán kính của vòng tròn
   const strokeWidth = 4;
   const circumference = 2 * Math.PI * radius;
@@ -31,7 +31,6 @@ const HistoryExamLayout = () => {
     const year = date.getFullYear();
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
-  
     // Trả về dạng "DD/MM/YYYY HH:mm"
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
@@ -42,8 +41,8 @@ const HistoryExamLayout = () => {
       navigation.getParent()?.setOptions({ tabBarStyle: { display: "flex" } });
   }, [navigation]);
 
-  const calculatePercentage = (correctAnswers: number) => {
-    return Math.round((correctAnswers / totalQuestions) * 100);
+  const calculatePercentage = (correctAnswers: number, numQuestion: number) => {
+    return Math.round((correctAnswers / numQuestion) * 100);
   };
 
   const calculateStrokeDashoffset = (percentage: number) => {
@@ -81,7 +80,7 @@ const HistoryExamLayout = () => {
           // inverted
           keyExtractor={(item) => item.thid.toString()}
           renderItem={({ item }) => {
-            const percentage = calculatePercentage(item.numcorrectques);
+            const percentage = calculatePercentage(item.numcorrectques, item.numques);
             const strokeDashoffset = calculateStrokeDashoffset(percentage);
 
             return (
