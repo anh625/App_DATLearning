@@ -10,8 +10,10 @@ type RootStackParamList = {
     homegames: undefined;
     guides: undefined;
     ranks: undefined;
+    gameplay: undefined;
     myTabs: undefined;
     distionary: undefined;
+    wordDetail:{ wordData: WordDictionary[] } | undefined;
 };
 declare global {
     namespace ReactNavigation {
