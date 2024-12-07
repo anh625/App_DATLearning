@@ -1,18 +1,31 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
-import { CompatClient, Stomp, Client } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Button,
+} from "react-native";
+import { CompatClient, Stomp, Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 import apiClient from "../../bearerToken";
-import { getServerIpAddress, getTokenAuthor, getUserInfo } from '@/app/(tabs)/data';
+import {
+  getServerIpAddress,
+  getTokenAuthor,
+  getUserInfo,
+} from "@/app/(tabs)/data";
 import { AxiosInstance } from "axios";
 import Toast from "react-native-toast-message";
+import { green } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+import EndGameModal from "./EndGameModal";
 
 export interface PlayerInfo {
-  name: String,
-  image: String,
-  point: number
+  name: String;
+  image: String;
+  point: number;
 }
 const GamePlayScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -24,78 +37,86 @@ const GamePlayScreen = () => {
   const [userId, setUserId] = useState<String>("");
   const [roomId, setRoomId] = useState<String>("");
   const [stomp, setStomp] = useState<CompatClient | null>(null);
+  const [showEndGameModal, setShowEndGameModal] = useState(false);
+
   let stompClient: CompatClient | null = null;
   let socket: any = null;
-  
-  const handleSocketMessage = (message : any) => {
-    console.log(message.message)
-    switch(message.message){
-      case "ROOM_MESSAGE": 
-          console.log(message.data);
-          Toast.show({
-            type: 'info', // success | error | info
-            text1: message.data,
-            position: 'bottom', // Hoặc top, center
+
+  const handleSocketMessage = (message: any) => {
+    console.log(message.message);
+    switch (message.message) {
+      case "ROOM_MESSAGE":
+        console.log(message.data);
+        Toast.show({
+          type: "info", // success | error | info
+          text1: message.data,
+          position: "bottom", // Hoặc top, center
         });
         break;
       case "PLAYER_INFO":
         const info = message.data;
-        setYourInfo(info["YOU"])
-        if(info["COMPETITOR"]){
-          setCompetitorInfo(info["COMPETITOR"])
+        setYourInfo(info["YOU"]);
+        if (info["COMPETITOR"]) {
+          setCompetitorInfo(info["COMPETITOR"]);
         }
         break;
       case "WORDS_OF_GAME":
-        const words = message.data
-        setAnswers(words.slice(0, 8))
-        setQuestion(words[words.length - 1])
+        const words = message.data;
+        setAnswers(words.slice(0, 8));
+        setQuestion(words[words.length - 1]);
         break;
       case "END":
         break;
       case "QUIT":
-        break; 
+        break;
       case "COUNTER":
-        const s = message.data
-        setScore([s["YOU"], s["COMPETITOR"]])
+        const s = message.data;
+        setScore([s["YOU"], s["COMPETITOR"]]);
         break;
     }
-  }
+  };
   const decodeJWT = (token: string) => {
-    const [header, payload, signature] = token.split('.');
-    const decodedPayload = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    const [header, payload, signature] = token.split(".");
+    const decodedPayload = JSON.parse(
+      atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+    );
     return decodedPayload;
   };
   const fetchGames = async () => {
     try {
-      console.warn = () => {}
+      console.warn = () => {};
       const apiInstance = await apiClient();
       const uid = decodeJWT(getTokenAuthor())["uid"];
       setUserId(uid);
       const response = await apiInstance.get("/game/join");
-      const room = (response.data.roomId);
+      const room = response.data.roomId;
       setRoomId(room);
-      const SOCKET_URL = `http://${getServerIpAddress()}:8080/chat`
-      if(socket == null && stomp == null && stompClient == null){
+      const SOCKET_URL = `http://${getServerIpAddress()}:8080/chat`;
+      if (socket == null && stomp == null && stompClient == null) {
         socket = new SockJS(SOCKET_URL);
         stompClient = Stomp.over(socket);
         stompClient.debug = () => {};
         if (!socket.OPEN) {
           stompClient.connect(
-            { "token": getTokenAuthor() },
+            { token: getTokenAuthor() },
             function (frame: any) {
               setTimeout(function () {
                 setStomp(stompClient);
                 stompClient!.subscribe(
                   `/topic/game/${room}`,
                   (messageOutput: any) => {
-                    handleSocketMessage(decodeBinaryBody(messageOutput["_binaryBody"]))
-                  },
+                    handleSocketMessage(
+                      decodeBinaryBody(messageOutput["_binaryBody"])
+                    );
+                  }
                 );
                 stompClient!.subscribe(
                   `/topic/game/${room}/${uid}`,
                   (messageOutput: any) => {
-                    handleSocketMessage(decodeBinaryBody(messageOutput["_binaryBody"]))
-                  },
+                    handleSocketMessage(
+                      decodeBinaryBody(messageOutput["_binaryBody"])
+                    );
+                  }
                 );
               }, 500);
             }
@@ -103,16 +124,19 @@ const GamePlayScreen = () => {
         }
       }
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      console.error("Error fetching messages:", error);
     }
-  }
+  };
+
   useEffect(() => {
     fetchGames();
   }, []);
-  
+
   const handleAnswerPress = async (selectedAnswer: string) => {
     const apiInstance = await apiClient();
-    const res = await apiInstance.get(`game/submit?roomId=${roomId}&vie=${selectedAnswer}&en=${question}`)
+    const res = await apiInstance.get(
+      `game/submit?roomId=${roomId}&vie=${selectedAnswer}&en=${question}`
+    );
   };
   const decodeBinaryBody = (binaryBody: number[]): string => {
     const textDecoder = new TextDecoder();
@@ -134,14 +158,23 @@ const GamePlayScreen = () => {
           style={{ zIndex: 10, paddingLeft: 10 }}
           onPress={() => navigation.navigate("homegames")}
         />
-        <Text style={styles.headerTitle}>Bảng xếp hạng</Text>
+        <Text style={styles.headerTitle}>Trò Chơi</Text>
       </View>
       {/* Thông tin người chơi */}
       <View style={styles.playerInfo}>
         <View style={styles.avatar} />
         <View>
-          <Text style={styles.playerName}>{competitorInfo && competitorInfo.name ? competitorInfo.name : '????'}</Text>
-          <Text style={styles.playerStats}>🏆 {competitorInfo && competitorInfo.point ? competitorInfo.point : '????'}</Text>
+          <Text style={styles.playerName}>
+            {competitorInfo && competitorInfo.name
+              ? competitorInfo.name
+              : "????"}
+          </Text>
+          <Text style={styles.playerStats}>
+            🏆{" "}
+            {competitorInfo && competitorInfo.point
+              ? competitorInfo.point
+              : "????"}
+          </Text>
           <Text style={styles.playerStats}>✔️ {score[1]}</Text>
         </View>
       </View>
@@ -167,12 +200,22 @@ const GamePlayScreen = () => {
         <View style={styles.playerInfo}>
           <View style={styles.avatar} />
           <View>
-            <Text style={styles.playerName}>{yourInfo && yourInfo.name ? yourInfo.name : 'None'}</Text>
-            <Text style={styles.playerStats}>🏆 {yourInfo && yourInfo.point ? yourInfo.point : 'None'}</Text>
+            <Text style={styles.playerName}>
+              {yourInfo && yourInfo.name ? yourInfo.name : "None"}
+            </Text>
+            <Text style={styles.playerStats}>
+              🏆 {yourInfo && yourInfo.point ? yourInfo.point : "None"}
+            </Text>
             <Text style={styles.playerStats}>✔️ {score[0]}</Text>
+          </View>
+          <View style={{ width: 50, height: 50, backgroundColor: "green" }}>
+            <TouchableOpacity onPress={() => setShowEndGameModal(true)}>
+              <Text> End </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
+      <EndGameModal visible={showEndGameModal} score={score} />
     </View>
   );
 };
@@ -258,4 +301,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GamePlayScreen
+export default GamePlayScreen;
