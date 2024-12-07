@@ -17,6 +17,7 @@ import { useNavigation } from 'expo-router';
 import { setLogout } from '@/app/(tabs)/data';
 import GameLayout from './navigationGame';
 import DictionaryLayout from './navigationDictionary';
+import { AntDesign } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 const MyTabs = () => {
@@ -74,7 +75,7 @@ const MyTabs = () => {
               focused ? <Text style={styleGlobal.textBottomTap}>Tra từ điển</Text> : null
             ),
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome6 name="gift" size={size} color={color} />
+              <AntDesign name="book" size={size} color={color} />
             ),
           }}
         />

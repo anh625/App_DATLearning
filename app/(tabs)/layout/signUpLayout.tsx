@@ -12,6 +12,12 @@ import { NavigationProp } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { getServerIpAddress } from '../data';
+
+interface apiSignin {
+    code: number,
+    message: string,
+};
+
 const SignUpLayout = () => {
     //chuyen sang trang signIn
     const navigation: NavigationProp<RootStackParamList> = useNavigation();
@@ -44,7 +50,7 @@ const SignUpLayout = () => {
     const [name, setName] = useState("")
     const [pass, setPass] = useState("")
     const [comfirmPass, setComfirmPass] = useState("")
-    const [errorEmail, setErrorEmail] = useState("")
+    const [errorEmail, setErrorEmail] = useState<string>()
     const [errorName, setErrorName] = useState("")
     const [errorPass, setErrorPass] = useState("")
     const [errorComPass, setErrorComPass] = useState("")
@@ -54,14 +60,14 @@ const SignUpLayout = () => {
     const [eComPass, setEComPass] = useState(false)
     const [iVisible,setIVisible] = useState(false)
     const [loading, setLoading] = useState(false);
-
-    const status31 = () => {
-        if(pass.length == 0) {setErrorPass("Mat khau khong khong duoc rong"); setEPass(true); setEComPass(false)}
-        else {
-            if(pass != comfirmPass) {setErrorComPass("Mat khau khong trung khop"); setEComPass(true); setEPass(false)}
-            else {setStatusIndex("1"); setEPass(false); setEComPass(false)}
-        };
-    }
+    const [existEmail,setExistEmail]=useState<string>();
+    // const status31 = () => {
+    //     if(pass.length == 0) {setErrorPass("Mat khau khong khong duoc rong"); setEPass(true); setEComPass(false)}
+    //     else {
+    //         if(pass != comfirmPass) {setErrorComPass("Mat khau khong trung khop"); setEComPass(true); setEPass(false)}
+    //         else {setStatusIndex("1"); setEPass(false); setEComPass(false)}
+    //     };
+    // }
     const status12 = () => {
         if(validateEmail(email)) {setStatusIndex("2"); setEEmail(false)}
         else {setErrorEmail("Nhap sai dinh dang email"); setEEmail(true)};
@@ -86,9 +92,11 @@ const SignUpLayout = () => {
     //dang ki;
     const postLogin = async () => {
         setLoading(true);
+        if(pass != comfirmPass) {setErrorComPass("Mat khau khong trung khop"); setEComPass(true); setEPass(false); return;}
+        setEPass(false); setEComPass(false)
         const ipAddress = getServerIpAddress();
         try {
-            let response = await fetch(`http://${ipAddress}:8080`, {
+            let response = await fetch(`http://${ipAddress}:8080/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,7 +107,22 @@ const SignUpLayout = () => {
                     password: pass,
                 }),
             });
-            setIVisible(true);
+            const result: apiSignin = await response.json();
+            if(result.code == 409 || result.code == 400){
+                setStatusIndex("1");
+                setEEmail(true);
+                setErrorEmail(result.message);
+                setEComPass(false); setEPass(false);
+                return;
+            }
+            if(result.code == 201){
+                setIVisible(true);
+                setEComPass(false); setEPass(false);
+            }
+            else {
+                setErrorComPass(result.message);
+                setEComPass(true); setEPass(false);
+            };
         } catch (error) {
             console.error(error);
             setLoading(false);
@@ -121,7 +144,7 @@ const SignUpLayout = () => {
                 <View>
                     {/* inputbox */}
                     {statusIndex == "1" && (
-                        <View>
+                        <View style={{justifyContent:"center",alignItems:"center"}}>
                             <InputBox variable={email} namePlaceholder='Email' onChangeText={setEmail} isPass={false} errorMess={errorEmail} error={eEmail}/>
                             <ButtonBox name='Continue' background='#459DE4' funVoid={status12} border={0} colorText="#FFFDFD"/>
                         </View>

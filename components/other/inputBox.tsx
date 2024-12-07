@@ -8,7 +8,7 @@ interface StatusProps {
     namePlaceholder: string;
     isPass: boolean;
     onChangeText: (value: string) => void;
-    errorMess: string;
+    errorMess: string | undefined;
     error: boolean;
 }
 
@@ -89,7 +89,7 @@ const InputBox: React.FC<StatusProps> = ({ variable, namePlaceholder, onChangeTe
             {show && isPass && !e && (<Ionicons style={styleGlobal.iconEye} name="eye" size={24} color="#459DE4" onPress={handleEye}/>)}
             {!show && isPass && !e && (<Ionicons style={styleGlobal.iconEye} name="eye-off" size={24} color="#459DE4" onPress={handleEye}/>)}
             {e && (<Foundation style={styleGlobal.iconEye} name="info" size={24} color="red" />)}
-            {e && (<Text style={styleGlobal.errorMess}>{errorMess}</Text>)}
+            {e && errorMess && (<Text style={styleGlobal.errorMess}>{errorMess}</Text>)}
         </View>
     )
 }

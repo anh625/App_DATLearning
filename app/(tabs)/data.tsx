@@ -207,6 +207,7 @@ export const getTests = ():Questions[] =>{
 }
 
 
+import { Audio } from 'expo-av';
 //ip dong
 import Constants from 'expo-constants';
 
@@ -297,3 +298,52 @@ export interface ApiWordDictionary{
     message: string;
     data: WordDictionary[];
 }
+let tname: string;
+export const setTname = (data: string) =>{
+    tname = data;
+}
+
+export const getTname = () =>{
+    return tname
+}
+
+let lname: string;
+export const setLname = (data: string) =>{
+    tname = data;
+}
+
+export const getLname = () =>{
+    return tname
+}
+
+export const playSound = async (link:string) => {
+    if(link){
+        const text = link.split("https");
+        // Phần văn bản trước URL
+        // Phần URL
+        const url = "https" + text[1].trim();
+        try {
+        const { sound } = await Audio.Sound.createAsync(
+            { uri: url }
+        );
+        await sound.playAsync();
+        
+        // Giải phóng tài nguyên sau khi âm thanh phát xong
+        sound.setOnPlaybackStatusUpdate((status) => {
+            if (status.isLoaded && status.didJustFinish) {
+                sound.unloadAsync(); // Giải phóng tài nguyên sau khi phát xong
+            }
+        });          
+        } catch (error) {
+        console.error('Lỗi khi phát âm thanh:', error);
+        }
+    }
+};
+
+let closeChat: () => void;
+export const setCloseChat = (fun: ()=>void)=>{
+    closeChat = fun;
+}
+export const getCloseChat = () =>{
+    return closeChat;
+};

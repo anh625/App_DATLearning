@@ -3,10 +3,11 @@ import { BackHandler, Text, ToastAndroid, TouchableOpacity, View } from "react-n
 import HeaderApp from "../other/header";
 import { useEffect, useState } from "react";
 import Answer from "./answer";
-import { ApiAnswer, ApiQuestions, getAnswer, getQuestions, getTidApi, getToLevel, Questions, setAnswer, setEQues, setQuestions } from "@/app/(tabs)/data";
+import { ApiAnswer, ApiQuestions, getAnswer, getQuestions, getTidApi, getTname, getToLevel, playSound, Questions, setAnswer, setEQues, setQuestions } from "@/app/(tabs)/data";
 import apiClient from "@/app/(tabs)/bearerToken";
 import axios from "axios";
 import Toast from "react-native-toast-message";
+import { Audio } from "expo-av";
 interface StatusProps {
     backVoid: () => void,
 }
@@ -14,9 +15,10 @@ interface StatusProps {
 const Question: React.FC<StatusProps>  = ({backVoid}) => {
     const [question,setQuestion] = useState<Questions>();
     const [uAnswer,setUAnswer] = useState<string>();
-    const [endQues,setEndQues] = useState(false);
+    const [t,setT] = useState<string>("");
     useEffect(()=>{
         setEQues(false);
+        setT(getTname());
         const handleBack = () => {
             backVoid();
             return true;
@@ -44,7 +46,30 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
     //         }
     //     }
     // },[uAnswer])
-
+    //ham phat ra tieng audio
+    // const playSound = async (link:string) => {
+    //     if(link){
+    //         const text = link.split("https");
+    //         // Phần văn bản trước URL
+    //         // Phần URL
+    //         const url = "https" + text[1].trim();
+    //         try {
+    //         const { sound } = await Audio.Sound.createAsync(
+    //             { uri: url }
+    //         );
+    //         await sound.playAsync();
+            
+    //         // Giải phóng tài nguyên sau khi âm thanh phát xong
+    //         sound.setOnPlaybackStatusUpdate((status) => {
+    //             if (status.isLoaded && status.didJustFinish) {
+    //                 sound.unloadAsync(); // Giải phóng tài nguyên sau khi phát xong
+    //             }
+    //         });          
+    //         } catch (error) {
+    //         console.error('Lỗi khi phát âm thanh:', error);
+    //         }
+    //     }
+    // };
     // next question
     const nextQuestion = async () =>{
         try{
@@ -81,10 +106,19 @@ const Question: React.FC<StatusProps>  = ({backVoid}) => {
     }
     return(
         <View style={styleGlobal.mainLayout}>
-            <HeaderApp isHome={false} title="Hello and goodbye" funVoid={backVoid}/>    
+            <HeaderApp isHome={false} title={t} funVoid={backVoid}/>    
             <View style={styleGlobal.viewBodyQues} >
                 <View style={styleGlobal.viewHeaderQues}>
-                    <Text style={styleGlobal.titleQues}>Từ nào có nghĩa: {question?.question} </Text>
+                    {question?.question.includes('https') ? 
+                                <View style={styleGlobal.viewQuesUrl}>
+                                    <Text style={styleGlobal.titleQuesUrl}>Hãy chọn từ được nói trong: </Text>
+                                    <TouchableOpacity onPress={() => playSound(question?.question)}>
+                                    <Text style={styleGlobal.titleQuesUrl}>Nhấn vào đây để nghe</Text>
+                                </TouchableOpacity> 
+                                </View>
+                                : 
+                            <Text style={styleGlobal.titleQues}>{question?.question}</Text>}
+                    {/* <Text style={styleGlobal.titleQues}>Từ nào có nghĩa: {question?.question} </Text> */}
                 </View>
                 <View style={styleGlobal.mainLayout}>
                     {question?.answers.map((answer,index)=>(

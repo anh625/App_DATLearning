@@ -5,7 +5,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useState } from "react";
 import Vocabulary from "@/app/(tabs)/layout/vocabularyLayout";
 import Svg, { Circle } from 'react-native-svg';
-import { getResultTest } from "@/app/(tabs)/data";
+import { getResultTest, playSound } from "@/app/(tabs)/data";
 import { Audio } from "expo-av";
 
 interface StatusProps {
@@ -42,31 +42,6 @@ const Result: React.FC<StatusProps>  = ({goVoid, backVoid}) => {
         BackHandler.addEventListener("hardwareBackPress",handleBack);
         return () => {BackHandler.removeEventListener("hardwareBackPress",handleBack)};
     },[])
-
-    //ham phat ra tieng audio
-    const playSound = async (link:string) => {
-        if(link){
-            const text = link.split("https");
-            // Phần văn bản trước URL
-            // Phần URL
-            const url = "https" + text[1].trim();
-            try {
-            const { sound } = await Audio.Sound.createAsync(
-                { uri: url }
-            );
-            await sound.playAsync();
-            
-            // Giải phóng tài nguyên sau khi âm thanh phát xong
-            sound.setOnPlaybackStatusUpdate((status) => {
-                if (status.isLoaded && status.didJustFinish) {
-                    sound.unloadAsync(); // Giải phóng tài nguyên sau khi phát xong
-                }
-            });          
-            } catch (error) {
-            console.error('Lỗi khi phát âm thanh:', error);
-            }
-        }
-    };
 
     if(!result){
         return(<></>);

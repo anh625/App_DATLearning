@@ -1,8 +1,9 @@
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+
 # Prepare
-notejs, jdk 17, android studio, setup JAVA_HOME ANDROID_HOME, dooker.
+notejs, jdk 17, android studio, setup JAVA_HOME ANDROID_HOME, docker.
 
 ## Get started
 0. Thay đổi chính sách Execution Policy 
@@ -32,9 +33,14 @@ notejs, jdk 17, android studio, setup JAVA_HOME ANDROID_HOME, dooker.
 4. Start the app
 
    ```bash
-    npx expo run:android
+   npx expo run:android
    ```
-
+   
+## other if project not run :D
+   ```bash
+   npm install express socket.io
+   npm instal socket.io-client
+   ```
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)

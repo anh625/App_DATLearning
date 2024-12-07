@@ -144,6 +144,7 @@ const SignInLayout = () => {
     const postLogin = async () => {
         setLoading(true);
         const ipAddress = getServerIpAddress();
+        console.log(ipAddress);
         try {
             let response = await fetch(`http://${ipAddress}:8080/auth/login`, {
                 method: 'POST',
@@ -157,6 +158,13 @@ const SignInLayout = () => {
             });
             const result: ApiResponse = await response.json();
             // console.log("sau post: "+JSON.stringify(result));
+            // if(result.code!=200){
+            //     setEPass(true);
+            //     setErrorPass(result.message);
+            //     console.log(result.code);
+            //     return;
+            // };
+            // setEPass(false);
             if (result && result.data && result.data.access_token) {
                 saveOrUpdateToken(result.data.access_token, email, password);
                 // console.log("header: "+result.data.access_token)
@@ -164,14 +172,16 @@ const SignInLayout = () => {
                 const apiInstance = await apiClient(); 
                 setAuthToken(apiInstance, result.data.access_token);
                 try {
-                    const levels: ApiLevels= await apiInstance.get('/levels/getAll');
+                    const levels: ApiLevels= await apiInstance  ('/levels/getAll');
                     setLevels(levels.data);
+                    console.log("level:"+JSON.stringify(levels));
                   } catch (error) {
                     console.error(error);
                 }
                 navigation.navigate("myTabs");
             } else {
                 setErrorPass("Tai khoan hoac mat khau khong chinh xac"); setEPass(true);
+                setLoading(false);
             }
         } catch (error) {
             console.error(error);
